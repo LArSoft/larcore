@@ -4,6 +4,7 @@ art_make(SERVICE_LIBRARIES larcorealg_Geometry
                            ${MF_MESSAGELOGGER}
                            ROOT::Core
          MODULE_LIBRARIES larcorealg_Geometry
+                          larcoreobj_SimpleTypesAndConstants
                           art_Framework_Services_Registry
                           ${MF_MESSAGELOGGER}
                           ROOT::Core
