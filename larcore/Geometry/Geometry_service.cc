@@ -14,6 +14,10 @@
 #include "larcore/Geometry/ExptGeoHelperInterface.h"
 
 // Framework includes
+#include "art/Framework/Principal/Run.h"
+#include "art/Framework/Principal/Handle.h"
+#include "canvas/Utilities/InputTag.h"
+#include "canvas/Utilities/Exception.h"
 #include "fhiclcpp/types/Table.h"
 #include "cetlib_except/exception.h"
 #include "cetlib/search_path.h"
@@ -21,6 +25,8 @@
 
 // C/C++ standard libraries
 #include <string>
+#include <algorithm> // std::min()
+#include <cassert>
 
 // check that the requirements for geo::Geometry are satisfied
 template struct lar::details::ServiceRequirementsChecker<geo::Geometry>;
@@ -33,10 +39,16 @@ namespace geo {
     : GeometryCore(pset)
     , fRelPath          (pset.get< std::string       >("RelativePath",     ""   ))
     , fDisableWiresInG4 (pset.get< bool              >("DisableWiresInG4", false))
-    , fForceUseFCLOnly  (pset.get< bool              >("ForceUseFCLOnly" , false))
+    , fNonFatalConfCheck(pset.get< bool              >("SkipConfigurationCheck", false))
     , fSortingParameters(pset.get<fhicl::ParameterSet>("SortingParameters", fhicl::ParameterSet() ))
     , fBuilderParameters(pset.get<fhicl::ParameterSet>("Builder",          fhicl::ParameterSet() ))
   {
+    
+    if (pset.has_key("ForceUseFCLOnly")) {
+      throw art::Exception(art::errors::Configuration)
+        << "Geometry service does not support `ForceUseFCLOnly` configuration parameter any more.\n";
+    }
+    
     // add a final directory separator ("/") to fRelPath if not already there
     if (!fRelPath.empty() && (fRelPath.back() != '/')) fRelPath += '/';
 
@@ -54,45 +66,36 @@ namespace geo {
 
     // load the geometry
     LoadNewGeometry(GDMLFileName, ROOTFileName);
+    
+    FillGeomeryConfigurationInfo(pset);
 
   } // Geometry::Geometry()
 
 
   void Geometry::preBeginRun(art::Run const& run)
   {
-    // FIXME this seems utterly wrong: constructor loads geometry based on an
-    // explicit parameter, whereas here we load it by detector name
-
-    // if we are requested to stick to the configured geometry, do nothing
-    if (fForceUseFCLOnly) return;
-
-    // check here to see if we need to load a new geometry.
-    // get the detector id from the run object
-    std::vector< art::Handle<sumdata::RunData> > rdcol;
-    run.getManyByType(rdcol);
-    if (rdcol.empty()) {
-      mf::LogWarning("Geometry") << "cannot find sumdata::RunData object to grab detector name\n"
-                                 << "this is expected if generating MC files\n"
-                                 << "using default geometry from configuration file\n";
-      return;
+    
+    sumdata::GeometryConfigurationInfo const inputGeomInfo
+      = ReadConfigurationInfo(run);
+    if (!CheckConfigurationInfo(inputGeomInfo)) {
+      if (fNonFatalConfCheck) {
+        // disable the non-fatal option if you need the details
+        mf::LogWarning("Geometry") << "Geometry used for " << run.id()
+          << " is incompatible with the one configured in the job.";
+      }
+      else {
+        throw cet::exception("Geometry")
+          << "Geometry used for run " << run.id()
+          << " is incompatible with the one configured in the job!"
+          << "\n=== job configuration " << std::string(50, '=')
+          << "\n" << fConfInfo
+          << "\n=== run configuration " << std::string(50, '=')
+          << "\n" << inputGeomInfo
+          << "\n======================" << std::string(50, '=')
+          << "\n";
+      }
     }
 
-    // if the detector name is still the same, everything is fine
-    auto const& newDetectorName = rdcol.front()->DetName();
-    if (DetectorName() == newDetectorName) return;
-
-    // check to see if the detector name in the RunData
-    // object has not been set.
-    std::string const nodetname("nodetectorname");
-    if (newDetectorName == nodetname) {
-      MF_LOG_WARNING("Geometry") << "Detector name not set: " << newDetectorName;
-    } // if no detector name stored
-    else {
-      // the detector name is specified in the RunData object
-      SetDetectorName(newDetectorName);
-    }
-
-    LoadNewGeometry(newDetectorName + ".gdml", newDetectorName + ".gdml", true);
   } // Geometry::preBeginRun()
 
 
@@ -162,5 +165,98 @@ namespace geo {
 
   } // Geometry::LoadNewGeometry()
 
+  //......................................................................
+  void Geometry::FillGeomeryConfigurationInfo(fhicl::ParameterSet const& config)
+  {
+    
+    sumdata::GeometryConfigurationInfo confInfo;
+    confInfo.dataVersion = sumdata::GeometryConfigurationInfo::DataVersion_t{1};
+    
+    // version 1:
+    confInfo.detectorName = DetectorName();
+    
+    // all versions
+    confInfo.geometryServiceConfiguration = config.to_indented_string();
+    fConfInfo = std::move(confInfo);
+    
+    MF_LOG_TRACE("Geometry")
+      << "Geometry configuration information:\n" << fConfInfo;
+    
+  } // Geometry::FillGeomeryConfigurationInfo()
+
+  //......................................................................
+  bool Geometry::CheckConfigurationInfo
+    (sumdata::GeometryConfigurationInfo const& other) const
+  {
+    
+    MF_LOG_DEBUG("Geometry") << "New geometry information:\n" << other;
+    
+    return CompareConfigurationInfo(fConfInfo, other);
+    
+  } // Geometry::CheckConfigurationInfo()
+  
+  //......................................................................
+  sumdata::GeometryConfigurationInfo const& Geometry::ReadConfigurationInfo
+    (art::Run const& run)
+  {
+    
+    try {
+      return run.getByLabel<sumdata::GeometryConfigurationInfo>
+        (art::InputTag{"GeometryConfigurationWriter"});
+    }
+    catch (art::Exception const& e) {
+      throw art::Exception{
+        e.categoryCode(),
+        "Can't read geometry configuration information.\n"
+        "Is `GeometryConfigurationWriter` service configured?\n",
+        e
+        };
+    }
+    
+  } // Geometry::ReadConfigurationInfo()
+  
+  
+  //......................................................................
+  bool Geometry::CompareConfigurationInfo(
+    sumdata::GeometryConfigurationInfo const& A,
+    sumdata::GeometryConfigurationInfo const& B
+    )
+  {
+    /*
+     * Implemented criteria:
+     * 
+     * * both informations must be valid
+     * * the detector names must exactly match
+     * 
+     */
+    
+    if (!A.isDataValid()) {
+      mf::LogWarning("Geometry") << "Geometry::CompareConfigurationInfo(): "
+        "invalid version for configuration A:\n" << A;
+      return false;
+    }
+    if (!B.isDataValid()) {
+      mf::LogWarning("Geometry") << "Geometry::CompareConfigurationInfo(): "
+        "invalid version for configuration B:\n" << B;
+      return false;
+    }
+    
+    // currently used only in debug mode (assert())
+    [[maybe_unused]] auto const commonVersion = std::min(A.dataVersion, B.dataVersion);
+    
+    assert(commonVersion >= 1);
+    
+    if (A.detectorName != B.detectorName) { // case sensitive so far
+      mf::LogWarning("Geometry") << "Geometry::CompareConfigurationInfo(): "
+        "detector name mismatch: '" << A.detectorName << "' vs. '"
+        << B.detectorName << "'";
+      return false;
+    }
+    
+    return true;
+  } // CompareConfigurationInfo()
+
+
+  //......................................................................
   DEFINE_ART_SERVICE(Geometry)
 } // namespace geo

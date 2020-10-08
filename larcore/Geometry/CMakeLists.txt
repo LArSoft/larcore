@@ -1,5 +1,8 @@
 art_make(SERVICE_LIBRARIES larcorealg_Geometry
+                           larcoreobj_SummaryData
+                           art_Framework_Services_Registry
                            art_Framework_Principal
+                           art_Framework_Core
                            art_Persistency_Provenance
                            ${MF_MESSAGELOGGER}
                            ROOT::Core
