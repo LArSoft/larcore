@@ -92,6 +92,10 @@ class geo::GeometryConfigurationWriter: public art::ProducingService {
   
     private:
   
+  /// Alias for the pointer to the data product object to be put into the run.
+  using InfoPtr_t = std::unique_ptr<sumdata::GeometryConfigurationInfo>;
+  
+  
   // -- BEGIN --- Interface ----------------------------------------------------
       
   /// Writes the information from the service configuration into the `run`.
@@ -100,22 +104,34 @@ class geo::GeometryConfigurationWriter: public art::ProducingService {
   // -- END --- Interface ------------------------------------------------------
   
   
-  /// Writes the information from the service configuration into the `run`.
-  void writeGeometryInformation(art::Run& run) const;
+  /// Loads the geometry information from the `run` (either directly or legacy).
+  InfoPtr_t loadInfo(art::Run& run) const;
   
-  /// Writes geometry information made up from the current run data.
-  void writeGeometryInformationFromRunData
-    (art::Run& run, sumdata::RunData const& data) const;
+  /// Creates configuration information based on the current `Geometry` service.
+  static InfoPtr_t extractInfoFromGeometry();
   
-  /// Returns if there is already geometry configuration information in `run`.
-  bool hasGeometryInformation(art::Run& run) const;
+  /// Reads geometry information from the run (returns null pointer if none).
+  InfoPtr_t readGeometryInformation(art::Run& run) const;
   
-  /// Returns the first of the `sumdata::RunData` information records in `run`.
+  /// Upgrades legacy `sumdata::RunData` in `run` to geometry information
+  /// (returns null pointer if no legacy information is present).
+  InfoPtr_t makeInfoFromRunData(art::Run& run) const;
+  
+  /// Returns a pointer to the `sumdata::RunData` in `run` (nullptr if none).
   sumdata::RunData const* readRunData(art::Run& run) const;
   
-  /// Puts the specified configuration information into the `run`.
-  void putGeometryInformationIntoRun
-    (art::Run& run, sumdata::GeometryConfigurationInfo confInfo) const;
+  /// Converts the legacy `data` into geometry configuration information.
+  static InfoPtr_t convertRunDataToGeometryInformation
+    (sumdata::RunData const& data);
+  
+  /// Alias to `std::make_unique<sumdata::GeometryConfigurationInfo>`
+  template <typename... Args>
+  static InfoPtr_t makeInfoPtr(Args&&... args)
+    {
+      return std::make_unique<sumdata::GeometryConfigurationInfo>
+        (std::forward<Args>(args)...);
+    }
+  
   
 }; // geo::GeometryConfigurationWriter
 
@@ -132,70 +148,73 @@ geo::GeometryConfigurationWriter::GeometryConfigurationWriter(Parameters const&)
 // -----------------------------------------------------------------------------
 void geo::GeometryConfigurationWriter::postReadRun(art::Run& run) {
   
-  if (!hasGeometryInformation(run)) {
-    sumdata::RunData const* runData = readRunData(run);
-    if (runData) writeGeometryInformationFromRunData(run, *runData);
-    else writeGeometryInformation(run);
-  }
+  InfoPtr_t confInfo = geo::GeometryConfigurationWriter::loadInfo(run);
+  
+  if (!confInfo) confInfo = extractInfoFromGeometry();
+  
+  run.put(std::move(confInfo), art::fullRun());
   
 } // geo::GeometryConfigurationWriter::postReadRun()
 
 
 // -----------------------------------------------------------------------------
-void geo::GeometryConfigurationWriter::writeGeometryInformation
-  (art::Run& run) const
+auto geo::GeometryConfigurationWriter::loadInfo(art::Run& run) const
+  -> InfoPtr_t
 {
   
-  sumdata::GeometryConfigurationInfo const& confInfo
+  /*
+   * Read geometry configuration information from the run:
+   * 
+   * 1. first attempt to directly read information from past runs of this
+   *    service
+   * 2. if none is found, attempt reading legacy information and upgrade it
+   * 3. if no legacy information is found either, return a null pointer
+   * 
+   */
+  InfoPtr_t info = readGeometryInformation(run);
+  
+  return info? std::move(info): makeInfoFromRunData(run);
+  
+} // geo::GeometryConfigurationWriter::loadInfo()
+
+
+// -----------------------------------------------------------------------------
+auto geo::GeometryConfigurationWriter::extractInfoFromGeometry() -> InfoPtr_t {
+  
+  sumdata::GeometryConfigurationInfo confInfo
     = art::ServiceHandle<geo::Geometry>()->configurationInfo();
   
   MF_LOG_DEBUG("GeometryConfigurationWriter")
-    << "Writing geometry configuration information:\n" << confInfo;
+    << "Geometry configuration information from service:\n" << confInfo;
   
-  putGeometryInformationIntoRun(run, std::move(confInfo));
+  return makeInfoPtr(std::move(confInfo));
   
-} // geo::GeometryConfigurationWriter::writeGeometryInformation()
+} // geo::GeometryConfigurationWriter::extractInfoFromGeometry()
 
 
 // -----------------------------------------------------------------------------
-void geo::GeometryConfigurationWriter::writeGeometryInformationFromRunData
-  (art::Run& run, sumdata::RunData const& data) const
+auto geo::GeometryConfigurationWriter::readGeometryInformation
+  (art::Run& run) const -> InfoPtr_t
 {
   
-  // we use the simplest version 1 data format
-  sumdata::GeometryConfigurationInfo confInfo;
-  confInfo.dataVersion = sumdata::GeometryConfigurationInfo::DataVersion_t{1};
-  confInfo.detectorName = data.DetName();
-  confInfo.geometryServiceConfiguration = "{}";
-  
-  MF_LOG_DEBUG("GeometryConfigurationInfo")
-   << "Writing geometry configuration information from run data:\n" << confInfo;
-  
-  putGeometryInformationIntoRun(run, std::move(confInfo));
-  
-} // geo::GeometryConfigurationWriter::writeGeometryInformationFromRunData()
-
-
-// -----------------------------------------------------------------------------
-void geo::GeometryConfigurationWriter::putGeometryInformationIntoRun
-  (art::Run& run, sumdata::GeometryConfigurationInfo confInfo) const
-{
-  run.put(
-    std::make_unique<sumdata::GeometryConfigurationInfo>(std::move(confInfo)),
-    art::fullRun()
-    );
-} // geo::GeometryConfigurationWriter::putGeometryInformationIntoRun()
-
-
-// -----------------------------------------------------------------------------
-bool geo::GeometryConfigurationWriter::hasGeometryInformation
-  (art::Run& run) const
-{
-  
-  art::Handle<sumdata::GeometryConfigurationInfo> h;
-  return run.getByLabel(art::InputTag{"GeometryConfigurationWriter"}, h);
+  art::Handle<sumdata::GeometryConfigurationInfo> infoHandle;
+  return
+    run.getByLabel(art::InputTag{"GeometryConfigurationWriter"}, infoHandle)
+    ? makeInfoPtr(*infoHandle): InfoPtr_t{};
   
 } // geo::GeometryConfigurationWriter::hasGeometryInformation()
+
+
+// -----------------------------------------------------------------------------
+auto geo::GeometryConfigurationWriter::makeInfoFromRunData(art::Run& run) const
+  -> InfoPtr_t
+{
+  
+  sumdata::RunData const* runData = readRunData(run);
+  
+  return runData? convertRunDataToGeometryInformation(*runData): InfoPtr_t{};
+  
+} // geo::GeometryConfigurationWriter::makeInfoFromRunData()
 
 
 // -----------------------------------------------------------------------------
@@ -206,6 +225,26 @@ sumdata::RunData const* geo::GeometryConfigurationWriter::readRunData
   run.getManyByType(allRunData);
   return allRunData.empty()? nullptr: allRunData.front().product();
 } // geo::GeometryConfigurationWriter::readRunData()
+
+
+// -----------------------------------------------------------------------------
+auto geo::GeometryConfigurationWriter::convertRunDataToGeometryInformation
+  (sumdata::RunData const& data) -> InfoPtr_t
+{
+  
+  sumdata::GeometryConfigurationInfo confInfo;
+  
+  // we use the simplest version 1 data format
+  confInfo.dataVersion = sumdata::GeometryConfigurationInfo::DataVersion_t{1};
+  confInfo.detectorName = data.DetName();
+  confInfo.geometryServiceConfiguration = "{}";
+  
+  MF_LOG_DEBUG("GeometryConfigurationInfo")
+   << "Built geometry configuration information from run data:\n" << confInfo;
+  
+  return makeInfoPtr(std::move(confInfo));
+  
+} // geo::GeometryConfigurationWriter::convertRunDataToGeometryInformation()
 
 
 // -----------------------------------------------------------------------------

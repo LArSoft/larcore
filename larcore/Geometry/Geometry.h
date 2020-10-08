@@ -171,7 +171,7 @@ namespace geo {
    * this happens _before_ the `Geometry` service itself is notified by _art_
    * of the start of the new run.
    * If some `geo::GeometryConfigurationWriter` information is already in the
-   * run record, `geo::GeometryConfigurationWriter` performs no action.
+   * run record, `geo::GeometryConfigurationWriter` replicates it again.
    * As legacy check, if there is no information in the
    * `sumdata::GeometryConfigurationInfo` form but there is a `sumdata::RunData`
    * data product, the latter is used as a base for the check.
