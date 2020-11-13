@@ -1,0 +1,50 @@
+#
+# File:    test_geometry_check_empty.fcl
+# Purpose: Produces data for geometry version check test on no input.
+# Author:  Gianluca Petrillo (petrillo@slac.stanford.edu)
+# Date:    November 11, 2020
+#
+# Input: none
+# 
+#
+#
+
+#include "test_geometries.fcl"
+#include "test_geometry_checks.fcl"
+
+
+process_name: GeoA
+
+
+services: {
+  
+  message: @local::message_services_interactive_debug # from test_geometries.fcl
+  
+           @table::test_geometry_check_services_A     # from test_geometries.fcl
+  
+} # services
+
+
+physics: {
+  
+  analyzers: {
+  
+    geocheck: @local::geometry_check_test_A # from test_geometry_checks.fcl
+  
+  } # analyzers
+  
+  checks:  [ geocheck ]
+  streams: [ rootoutput ]
+  
+} # physics
+
+
+outputs: {
+  rootoutput: {
+    
+    module_type: RootOutput
+    
+    fileName: "EmptyWithGeometryA.root"
+    
+  } # rootoutput
+} # outputs

@@ -1,0 +1,25 @@
+#
+# File:    test_geometry_check_geometryA_skipCheck.fcl
+# Purpose: Job with geometry A on input file, skips the check.
+# Author:  Gianluca Petrillo (petrillo@slac.stanford.edu)
+# Date:    November 12, 2020
+#
+# Input:  file prepared with Geometry service
+# Output: none
+#
+
+#include "test_geometries.fcl"
+
+
+process_name: GeoAworker
+
+
+services: {
+  
+  message: @local::message_services_interactive_debug # from test_geometries.fcl
+  
+           @table::test_geometry_check_services_A     # from test_geometries.fcl
+  
+} # services
+
+services.Geometry.SkipConfigurationCheck: true

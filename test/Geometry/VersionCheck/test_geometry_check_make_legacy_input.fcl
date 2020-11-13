@@ -1,0 +1,41 @@
+#
+# File:    test_geometry_check_make_legacy_input.fcl
+# Purpose: Produces a file with legacy detector geometry ("A") information.
+# Author:  Gianluca Petrillo (petrillo@slac.stanford.edu)
+# Date:    November 12, 2020
+#
+# Input:  none
+# Output: set on command line
+#
+#
+
+#include "test_geometries.fcl"
+
+
+process_name: GeoAlegacy
+
+
+services: {
+  
+  message: @local::message_services_interactive_debug # from test_geometries.fcl
+  
+} # services
+
+
+physics: {
+  
+  producers: {
+  
+    generator: {
+      
+      module_type: LegacyGeometryInfoWriter
+      
+      Name: "A"
+      
+    } // generator
+  
+  } # producers
+  
+  simulate:  [ generator ]
+  
+} # physics

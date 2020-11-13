@@ -1,0 +1,58 @@
+#
+# File:    test_geometries.fcl
+# Purpose: Service configuration settings for geometry information check tests.
+# Author:  Gianluca Petrillo (petrillo@slac.stanford.edu)
+# Date:    November 11, 2020
+#
+# Two "alternative" geometries are provided (they just differ by their name):
+# 
+# * `test_geometry_check_services_A`
+# * `test_geometry_check_services_B`
+#
+# It also provides a `messages` service configuration for debugging.
+#
+
+#include "geometry_lartpcdetector.fcl"
+
+BEGIN_PROLOG
+
+# ------------------------------------------------------------------------------
+test_geometry_check_services_A: {
+  
+  @table::lartpcdetector_geometry_services
+  
+} # test_geometry_check_services_A
+
+test_geometry_check_services_A.Geometry.Name: "A"
+
+
+# ------------------------------------------------------------------------------
+test_geometry_check_services_B: {
+  
+  @table::lartpcdetector_geometry_services
+  
+} # test_geometry_check_services_B
+
+test_geometry_check_services_B.Geometry.Name: "B"
+
+
+# ------------------------------------------------------------------------------
+message_services_interactive_debug: {
+  destinations: {
+    AllDebug: {
+      #
+      # message destination: all debug messages to console
+      #
+      type:       "cout"
+      threshold:  "DEBUG"
+      categories: {
+        default: {}
+      }
+    } # AllDebug
+
+  } # destinations
+} # message_services_interactive_debug
+
+
+
+END_PROLOG

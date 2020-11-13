@@ -1,0 +1,38 @@
+#
+# File:    test_geometry_check_require_geometryB.fcl
+# Purpose: Job with geometry B on input file.
+# Author:  Gianluca Petrillo (petrillo@slac.stanford.edu)
+# Date:    November 12, 2020
+#
+# Input:  file prepared with Geometry service
+# Output: none
+#
+
+#include "test_geometries.fcl"
+#include "test_geometry_checks.fcl"
+
+
+process_name: GeoBcheckTest
+
+
+services: {
+  
+  message: @local::message_services_interactive_debug # from test_geometries.fcl
+  
+           @table::test_geometry_check_services_B     # from test_geometries.fcl
+  
+} # services
+
+
+physics: {
+  
+  analyzers: {
+  
+    geocheck: @local::geometry_check_test_B # from test_geometry_checks.fcl
+  
+  } # analyzers
+  
+  checks:  [ geocheck ]
+  
+} # physics
+

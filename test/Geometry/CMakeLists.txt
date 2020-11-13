@@ -1,5 +1,7 @@
 cet_enable_asserts()
 
+add_subdirectory(VersionCheck)
+
 # test modules
 simple_plugin ( GeometryIteratorLoopTest "module"
                     larcorealg_Geometry
@@ -22,6 +24,7 @@ simple_plugin ( GeometryTest "module"
                     ${ROOT_BASIC_LIB_LIST}
               )
 
+# ------------------------------------------------------------------------------
 # geometry test on "standard" geometry
 
 # This test is equivalent to geometry_test, but run in art environment
@@ -51,7 +54,8 @@ cet_test(dump_channel_map_test HANDBUILT
   DATAFILES dump_lartpcdetector_channelmap.fcl
 )
 
-
+# ------------------------------------------------------------------------------
 install_headers()
 install_fhicl()
 install_source()
+

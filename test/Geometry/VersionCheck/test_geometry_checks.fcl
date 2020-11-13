@@ -1,0 +1,44 @@
+#
+# File:    test_geometry_checks.fcl
+# Purpose: Template configuration for geometry configuration explicit check.
+# Author:  Gianluca Petrillo (petrillo@slac.stanford.edu)
+# Date:    November 11, 2020
+#
+
+BEGIN_PROLOG
+
+# ------------------------------------------------------------------------------
+geometry_check_test_A: {
+  module_type: GeometryInfoCheck
+  
+  GeometryInfo: {
+    Name: "a"
+  }
+  
+  LegacyInfo: {
+    Name:    "a"
+    Required: false
+  }
+  
+} # geometry_check_test_A
+
+
+# ------------------------------------------------------------------------------
+geometry_check_test_B: {
+  module_type: GeometryInfoCheck
+  
+  GeometryInfo: {
+    Name: "b"
+  }
+  
+  LegacyInfo: {
+    Name:    "b"
+    Required: false
+  }
+  
+} # geometry_check_test_B
+
+
+# ------------------------------------------------------------------------------
+
+END_PROLOG
