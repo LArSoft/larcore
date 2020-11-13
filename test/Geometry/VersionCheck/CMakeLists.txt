@@ -27,14 +27,32 @@ cet_test(GeometryInfoCheckEmptyInput HANDBUILT
 
 # no input file, with a job including Geometry service
 # but not the new GeometryConfigurationWriter service;
-# expected: configuration error
+# expected: `ProductNotFound` exception
 
-cet_test(GeometryInfoCheckNoWriter HANDBUILT
+cet_test(q HANDBUILT
   TEST_EXEC lar
   TEST_ARGS --rethrow-all --config ./test_geometry_check_nogeoconfwriter.fcl
-  DATAFILES test_geometries.fcl test_geometry_checks.fcl test_geometry_check_nogeoconfwriter.fcl
+  DATAFILES
+    test_geometries.fcl test_geometry_checks.fcl
+    test_geometry_check_nogeoconfwriter.fcl
   TEST_PROPERTIES
-    DEPENDS GeometryInfoCheckEmptyInput
+    WILL_FAIL TRUE
+)
+
+
+# no input file, with a job including Geometry service
+# but not the new GeometryConfigurationWriter service,
+# and Geometry service is required to skip the check;
+# expected: still `ProductNotFound` exception
+
+cet_test(GeometryInfoCheckNoWriterSkipCheck HANDBUILT
+  TEST_EXEC lar
+  TEST_ARGS --rethrow-all --config ./test_geometry_check_nogeoconfwriter_skipcheck.fcl
+  DATAFILES
+    test_geometries.fcl test_geometry_checks.fcl
+    test_geometry_check_nogeoconfwriter.fcl
+    test_geometry_check_nogeoconfwriter_skipcheck.fcl
+  TEST_PROPERTIES
     WILL_FAIL TRUE
 )
 

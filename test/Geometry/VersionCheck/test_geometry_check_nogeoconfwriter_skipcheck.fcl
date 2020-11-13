@@ -1,0 +1,13 @@
+#
+# File:    test_geometry_check_nogeoconfwriter_skipcheck.fcl
+# Purpose: Job with geometry but without GeometryConfigurationWriter,
+#          and the request to skip the check.
+# Author:  Gianluca Petrillo (petrillo@slac.stanford.edu)
+# Date:    November 11, 2020
+#
+# Input: none
+#
+
+#include "test_geometry_check_nogeoconfwriter.fcl"
+
+services.Geometry.SkipConfigurationCheck: true
