@@ -92,16 +92,14 @@ class geo::GeometryConfigurationWriter: public art::ProducingService {
   
     private:
   
-  /// Alias for the pointer to the data product object to be put into the run.
-  using InfoPtr_t = std::unique_ptr<sumdata::GeometryConfigurationInfo>;
-  
-  
-  // -- BEGIN --- Interface ----------------------------------------------------
-      
   /// Writes the information from the service configuration into the `run`.
   virtual void postReadRun(art::Run& run) override;
   
-  // -- END --- Interface ------------------------------------------------------
+  
+    private:
+  
+  /// Alias for the pointer to the data product object to be put into the run.
+  using InfoPtr_t = std::unique_ptr<sumdata::GeometryConfigurationInfo>;
   
   
   /// Loads the geometry information from the `run` (either directly or legacy).
@@ -124,13 +122,9 @@ class geo::GeometryConfigurationWriter: public art::ProducingService {
   static InfoPtr_t convertRunDataToGeometryInformation
     (sumdata::RunData const& data);
   
-  /// Alias to `std::make_unique<sumdata::GeometryConfigurationInfo>`
-  template <typename... Args>
-  static InfoPtr_t makeInfoPtr(Args&&... args)
-    {
-      return std::make_unique<sumdata::GeometryConfigurationInfo>
-        (std::forward<Args>(args)...);
-    }
+  /// Alias to `std::make_unique<sumdata::GeometryConfigurationInfo>`.
+  static InfoPtr_t makeInfoPtr(sumdata::GeometryConfigurationInfo const& info)
+    { return std::make_unique<sumdata::GeometryConfigurationInfo>(info); }
   
   
 }; // geo::GeometryConfigurationWriter
