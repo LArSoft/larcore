@@ -225,7 +225,7 @@ namespace geo {
     /// @{
     
     /// Fills the service configuration information into `fConfInfo`.
-    void FillGeomeryConfigurationInfo(fhicl::ParameterSet const& config);
+    void FillGeometryConfigurationInfo(fhicl::ParameterSet const& config);
     
     /// Returns if the `other` configuration is compatible with our current.
     bool CheckConfigurationInfo

@@ -29,7 +29,7 @@ cet_test(GeometryInfoCheckEmptyInput HANDBUILT
 # but not the new GeometryConfigurationWriter service;
 # expected: `ProductNotFound` exception
 
-cet_test(q HANDBUILT
+cet_test(GeometryInfoCheckNoWriter HANDBUILT
   TEST_EXEC lar
   TEST_ARGS --rethrow-all --config ./test_geometry_check_nogeoconfwriter.fcl
   DATAFILES

@@ -10,7 +10,6 @@
 
 // lar includes
 #include "larcorealg/Geometry/GeometryBuilderStandard.h"
-#include "larcoreobj/SummaryData/RunData.h"
 #include "larcore/Geometry/ExptGeoHelperInterface.h"
 
 // Framework includes
@@ -67,7 +66,7 @@ namespace geo {
     // load the geometry
     LoadNewGeometry(GDMLFileName, ROOTFileName);
     
-    FillGeomeryConfigurationInfo(pset);
+    FillGeometryConfigurationInfo(pset);
 
   } // Geometry::Geometry()
 
@@ -166,7 +165,8 @@ namespace geo {
   } // Geometry::LoadNewGeometry()
 
   //......................................................................
-  void Geometry::FillGeomeryConfigurationInfo(fhicl::ParameterSet const& config)
+  void Geometry::FillGeometryConfigurationInfo
+    (fhicl::ParameterSet const& config)
   {
     
     sumdata::GeometryConfigurationInfo confInfo;
@@ -182,7 +182,7 @@ namespace geo {
     MF_LOG_TRACE("Geometry")
       << "Geometry configuration information:\n" << fConfInfo;
     
-  } // Geometry::FillGeomeryConfigurationInfo()
+  } // Geometry::FillGeometryConfigurationInfo()
 
   //......................................................................
   bool Geometry::CheckConfigurationInfo
