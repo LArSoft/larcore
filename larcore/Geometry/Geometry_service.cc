@@ -170,12 +170,12 @@ namespace geo {
   {
     
     sumdata::GeometryConfigurationInfo confInfo;
-    confInfo.dataVersion = sumdata::GeometryConfigurationInfo::DataVersion_t{1};
+    confInfo.dataVersion = sumdata::GeometryConfigurationInfo::DataVersion_t{2};
     
-    // version 1:
+    // version 1+:
     confInfo.detectorName = DetectorName();
     
-    // all versions
+    // version 2+:
     confInfo.geometryServiceConfiguration = config.to_indented_string();
     fConfInfo = std::move(confInfo);
     

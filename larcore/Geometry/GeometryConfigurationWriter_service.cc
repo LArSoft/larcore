@@ -234,10 +234,9 @@ auto geo::GeometryConfigurationWriter::convertRunDataToGeometryInformation
   
   sumdata::GeometryConfigurationInfo confInfo;
   
-  // we use the simplest version 1 data format
+  // we use the simplest version 1 data format (legacy format)
   confInfo.dataVersion = sumdata::GeometryConfigurationInfo::DataVersion_t{1};
   confInfo.detectorName = data.DetName();
-  confInfo.geometryServiceConfiguration = "{}";
   
   MF_LOG_DEBUG("GeometryConfigurationInfo")
    << "Built geometry configuration information from run data:\n" << confInfo;
