@@ -13,4 +13,10 @@ bo_geometry_helper:
  service_provider : StandardGeometryHelper
 }
 
+bo_geometry_services: {
+  GeometryConfigurationWriter: {}
+  Geometry:                    @local::bo_geo
+  ExptGeoInterfaceHelper:      @local::bo_geometry_helper
+}
+
 END_PROLOG
