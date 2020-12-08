@@ -15,8 +15,7 @@ process_name: DumpChannelMap
 
 services: {
   
-  Geometry:               @local::standard_geo
-  ExptGeoHelperInterface: @local::standard_geometry_helper
+  @table::standard_geometry_services
   
   message: {
     destinations: {
