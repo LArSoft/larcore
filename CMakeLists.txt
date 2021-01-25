@@ -11,14 +11,9 @@ cmake_minimum_required (VERSION 3.12...3.18 FATAL_ERROR)
 project(larcore LANGUAGES CXX)
 
 # cetbuildtools contains our cmake modules
-SET ( CETBUILDTOOLS_VERSION $ENV{CETBUILDTOOLS_VERSION} )
-IF (NOT CETBUILDTOOLS_VERSION)
-    MESSAGE (FATAL_ERROR "ERROR: setup cetbuildtools to get the cmake modules")
-ENDIF()
+find_package(cetbuildtools REQUIRED)
 
-set(CMAKE_MODULE_PATH $ENV{CANVAS_ROOT_IO_DIR}/Modules
-		      $ENV{CETBUILDTOOLS_DIR}/Modules
-		      ${CMAKE_MODULE_PATH})
+list(APPEND CMAKE_MODULE_PATH $ENV{CANVAS_ROOT_IO_DIR}/Modules)
 
 include(CetCMakeEnv)
 cet_cmake_env()
@@ -37,7 +32,6 @@ find_ups_product( larcorealg )
 find_ups_product( art )
 find_ups_product(art_root_io)
 find_ups_product( messagefacility )
-find_ups_product( cetbuildtools )
 find_ups_root()
 
 # macros for artdaq_dictionary and simple_plugin
