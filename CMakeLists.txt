@@ -10,7 +10,6 @@ cmake_minimum_required (VERSION 3.19 FATAL_ERROR)
 
 project(larcore VERSION 09.24.02 LANGUAGES CXX)
 
-# cetbuildtools contains our cmake modules
 find_package(cetmodulels REQUIRED)
 find_package(canvas_root_io)
 
