@@ -6,19 +6,14 @@
 #  buildtool [-I /install/path] -bt[i] -jN
 # ======================================================================
 
-cmake_minimum_required (VERSION 3.12...3.18 FATAL_ERROR)
+cmake_minimum_required (VERSION 3.19 FATAL_ERROR)
 
-project(larcore LANGUAGES CXX)
+project(larcore 09.24.02 LANGUAGES CXX)
 
-# cetbuildtools contains our cmake modules
-<<<<<<< HEAD
 find_package(cetmodules REQUIRED)
 find_package(canvas_root_io)
-=======
-find_package(cetbuildtools REQUIRED)
 
 list(APPEND CMAKE_MODULE_PATH $ENV{CANVAS_ROOT_IO_DIR}/Modules)
->>>>>>> parent of 1d07502... how did I miss this one
 
 include(CetCMakeEnv)
 cet_cmake_env()
@@ -49,9 +44,9 @@ add_subdirectory(larcore)
 
 # tests
 add_subdirectory(test)
-
+add_subdirectory(cmakeConfig)
 # ups - table and config files
-add_subdirectory(ups)
+#add_subdirectory(ups)
 
 # packaging utility
-include(UseCPack)
+#include(UseCPack)
