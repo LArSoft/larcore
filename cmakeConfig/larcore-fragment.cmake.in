@@ -1,0 +1,5 @@
+find_package( ROOT REQUIRED COMPONENTS Core Geom GenVector)
+find_package(Boost REQUIRED COMPONENTS date_time filesystem graph program_options
+  regex system unit_test_framework)
+find_package( larcorealg REQUIRED)
+find_package( art REQUIRED)
