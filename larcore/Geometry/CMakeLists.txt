@@ -4,12 +4,12 @@ art_make(SERVICE_LIBRARIES larcorealg_Geometry
                            art_Framework_Principal
                            art_Framework_Core
                            art_Persistency_Provenance
-                           messagefacility::MFMessageLogger
+                           messagefacility::MF_MessageLogger
                            ROOT::Core
          MODULE_LIBRARIES larcorealg_Geometry
                           larcoreobj_SimpleTypesAndConstants
                           art_Framework_Services_Registry
-                          messagefacility::MFMessageLogger
+                          messagefacility::MF_MessageLogger
                           ROOT::Core
                           ROOT::Geom
                           ROOT::GenVector)
