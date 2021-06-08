@@ -10,7 +10,7 @@ cet_test(ServiceUtil_test
     ${ART_FRAMEWORK_SERVICES_REGISTRY}
     ${ART_UTILITIES}
     ${CANVAS}
-    messagefacility::MFMessageLogger
+    messagefacility::MF_MessageLogger
     fhiclcpp::fhiclcpp fhiclcpp::types
     ${CETLIB_EXCEPT}
   USE_BOOST_UNIT
