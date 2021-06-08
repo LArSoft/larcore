@@ -7,9 +7,9 @@ simple_plugin ( GeometryIteratorLoopTest "module"
                     larcorealg_Geometry
                     GeometryTestLib
                     larcore_Geometry_Geometry_service
-                    ${MF_MESSAGELOGGER}
+                    messagefacility::MFMessageLogger
                     
-                    ${FHICLCPP}
+                    fhiclcpp::fhiclcpp fhiclcpp::types
                     cetlib cetlib_except
              )
 
@@ -17,9 +17,9 @@ simple_plugin ( GeometryTest "module"
                     larcorealg_Geometry
                     GeometryTestLib
                     larcore_Geometry_Geometry_service
-                    ${MF_MESSAGELOGGER}
+                    messagefacility::MFMessageLogger
                     
-                    ${FHICLCPP}
+                    fhiclcpp::fhiclcpp fhiclcpp::types
                     cetlib cetlib_except
                     ${ROOT_BASIC_LIB_LIST}
               )
