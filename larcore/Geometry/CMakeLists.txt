@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 art_make(SERVICE_LIBRARIES larcorealg_Geometry
                            larcoreobj_SummaryData
                            art_Framework_Services_Registry
