@@ -12,7 +12,6 @@ project(larcore VERSION 9.24.02 LANGUAGES CXX)
 
 set(gdml_install_dir gdml)
 
-# cetbuildtools contains our cmake modules
 find_package(cetmodules REQUIRED)
 find_package(canvas_root_io)
 
@@ -32,8 +31,8 @@ find_ups_product( larcoreobj )
 find_ups_product( larcorealg )
 find_ups_product( art )
 find_ups_product( art_root_io )
-find_package( messagefacility )
 find_ups_root()
+find_package( messagefacility REQUIRED)
 
 # macros for artdaq_dictionary and simple_plugin
 include(ArtDictionary)
