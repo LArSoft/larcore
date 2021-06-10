@@ -8,12 +8,11 @@
 
 cmake_minimum_required (VERSION 3.12...3.18 FATAL_ERROR)
 
-project(larcore LANGUAGES CXX)
+project(larcore VERSION 9.24.02 LANGUAGES CXX)
 
 # cetbuildtools contains our cmake modules
-find_package(cetbuildtools REQUIRED)
-
-list(APPEND CMAKE_MODULE_PATH $ENV{CANVAS_ROOT_IO_DIR}/Modules)
+find_package(cetmoduiles REQUIRED)
+find_package(canvas_root_io)
 
 include(CetCMakeEnv)
 cet_cmake_env()
@@ -30,7 +29,7 @@ cet_report_compiler_flags()
 find_ups_product( larcoreobj )
 find_ups_product( larcorealg )
 find_ups_product( art )
-find_ups_product(art_root_io)
+find_ups_product( art_root_io )
 find_ups_product( messagefacility )
 find_ups_root()
 
@@ -46,7 +45,9 @@ add_subdirectory(larcore)
 add_subdirectory(test)
 
 # ups - table and config files
+if(WANT_UPS)
 add_subdirectory(ups)
+endif()
 
 # packaging utility
 include(UseCPack)
