@@ -196,6 +196,8 @@ namespace geo {
   } // Geometry::CheckConfigurationInfo()
   
   
+  using InfoPtr_t = std::unique_ptr<sumdata::GeometryConfigurationInfo>;
+
   //......................................................................
   sumdata::GeometryConfigurationInfo const& Geometry::ReadConfigurationInfo
     (art::Run const& run)
