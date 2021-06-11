@@ -52,4 +52,3 @@ endif()
 
 # packaging utility
 include(UseCPack)
- 
