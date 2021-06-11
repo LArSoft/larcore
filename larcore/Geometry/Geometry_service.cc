@@ -195,7 +195,6 @@ namespace geo {
     
   } // Geometry::CheckConfigurationInfo()
   
-  
   //......................................................................
   sumdata::GeometryConfigurationInfo const& Geometry::ReadConfigurationInfo
     (art::Run const& run)
@@ -205,7 +204,7 @@ namespace geo {
       art::Handle<sumdata::GeometryConfigurationInfo> infoHandle;
       return run.getByLabel<sumdata::GeometryConfigurationInfo>
         (art::InputTag{"GeometryConfigurationWriter"}, infoHandle)
-        ? std::make_unique<sumdata::GeometryConfigurationInfo>(*infoHandle): InfoPtr_t{};
+        ? makeInfoPtr(*infoHandle): InfoPtr_t{};
     }
     catch (art::Exception const& e) {
       throw art::Exception{
