@@ -201,10 +201,8 @@ namespace geo {
   {
     
     try {
-      art::Handle<sumdata::GeometryConfigurationInfo> infoHandle;
       return run.getByLabel<sumdata::GeometryConfigurationInfo>
-        (art::InputTag{"GeometryConfigurationWriter"}, infoHandle)
-        ? makeInfoPtr(*infoHandle): InfoPtr_t{};
+        (art::InputTag{"GeometryConfigurationWriter"});
     }
     catch (art::Exception const& e) {
       throw art::Exception{
