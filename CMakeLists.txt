@@ -13,8 +13,6 @@ project(larcore VERSION 09.24.02 LANGUAGES CXX)
 find_package(cetmodules REQUIRED)
 find_package(canvas_root_io)
 
-list(APPEND CMAKE_MODULE_PATH $ENV{CANVAS_ROOT_IO_DIR}/Modules)
-
 include(CetCMakeEnv)
 cet_cmake_env()
 
