@@ -205,9 +205,9 @@ namespace geo {
     
     try {
       art::Handle<sumdata::GeometryConfigurationInfo> infoHandle;
-      return run.getByLabel<sumdata::GeometryConfigurationInfo>
+      return *(run.getByLabel<sumdata::GeometryConfigurationInfo>
         (art::InputTag{"GeometryConfigurationWriter"}, infoHandle)
-        ? std::make_unique<sumdata::GeometryConfigurationInfo>(*infoHandle): InfoPtr_t{};
+        ? std::make_unique<sumdata::GeometryConfigurationInfo>(*infoHandle): InfoPtr_t{});
     }
     catch (art::Exception const& e) {
       throw art::Exception{
