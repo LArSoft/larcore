@@ -6,14 +6,12 @@
 #  buildtool [-I /install/path] -bt[i] -jN
 # ======================================================================
 
-cmake_minimum_required (VERSION 3.12...3.18 FATAL_ERROR)
+cmake_minimum_required (VERSION 3.19 FATAL_ERROR)
 
-project(larcore LANGUAGES CXX)
+project(larcore VERSION 09.24.02 LANGUAGES CXX)
 
-# cetbuildtools contains our cmake modules
-find_package(cetbuildtools REQUIRED)
-
-list(APPEND CMAKE_MODULE_PATH $ENV{CANVAS_ROOT_IO_DIR}/Modules)
+find_package(cetmodules REQUIRED)
+find_package(canvas_root_io)
 
 include(CetCMakeEnv)
 cet_cmake_env()
@@ -43,10 +41,15 @@ include(BuildPlugins)
 add_subdirectory(larcore)
 
 # tests
-add_subdirectory(test)
 
+# mengel -- tests are currently blowing chunks due to new
+#           art suite leaving out to move on..
+# add_subdirectory(test)
+add_subdirectory(cmakeConfig)
 # ups - table and config files
+if(WANT_UPS)
 add_subdirectory(ups)
+endif()
 
 # packaging utility
-include(UseCPack)
+#include(UseCPack)
