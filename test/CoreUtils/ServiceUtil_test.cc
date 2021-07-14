@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE(providersFromTest) {
      = lar::providersFrom<MyService, MyOtherService, YetAnotherService>();
 
    // not using BOOST_CHECK_EQUAL because we can't stream ProviderPacks
-   BOOST_CHECK(provPack == lar::makeProviderPack(&prov, &oprov, &yaprov));
+   BOOST_CHECK((provPack == lar::makeProviderPack(&prov, &oprov, &yaprov)));
 
    BOOST_CHECK_EQUAL(lar::providerFrom<MyService>(), &prov);
    BOOST_CHECK_EQUAL(lar::providerFrom<MyOtherService>(), &oprov);

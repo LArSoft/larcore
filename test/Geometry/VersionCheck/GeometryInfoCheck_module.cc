@@ -17,6 +17,7 @@
 #include "art/Framework/Principal/Handle.h"
 #include "art/Framework/Principal/Provenance.h"
 #include "canvas/Utilities/InputTag.h"
+#include "messagefacility/MessageLogger/MessageLogger.h"
 #include "fhiclcpp/types/OptionalTable.h"
 #include "fhiclcpp/types/OptionalAtom.h"
 #include "fhiclcpp/types/Atom.h"
@@ -247,8 +248,9 @@ void geo::GeometryInfoCheck::CheckLegacyGeometryInfo
   //
   // fetch geometry information
   //
-  std::vector<art::Handle<sumdata::RunData>> hInfoList;
-  run.getManyByType(hInfoList);
+  //std::vector<art::Handle<sumdata::RunData>> hInfoList;
+  //run.getManyByType(hInfoList);
+  auto hInfoList = run.getMany<sumdata::RunData>();
   if (hInfoList.empty()) {
     log << "\nNo information found.";
     if (!config.required) return; // well... all ok?
