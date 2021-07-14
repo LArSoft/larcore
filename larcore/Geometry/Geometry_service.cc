@@ -201,7 +201,7 @@ namespace geo {
   {
     
     try {
-      return run.getByLabel<sumdata::GeometryConfigurationInfo>
+      return run.getProduct<sumdata::GeometryConfigurationInfo>
         (art::InputTag{"GeometryConfigurationWriter"});
     }
     catch (art::Exception const& e) {

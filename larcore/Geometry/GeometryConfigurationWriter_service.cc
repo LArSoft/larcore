@@ -215,8 +215,9 @@ auto geo::GeometryConfigurationWriter::makeInfoFromRunData(art::Run& run) const
 sumdata::RunData const* geo::GeometryConfigurationWriter::readRunData
   (art::Run& run) const
 {
-  std::vector<art::Handle<sumdata::RunData>> allRunData;
-  run.getManyByType(allRunData);
+  //std::vector<art::Handle<sumdata::RunData>> allRunData;
+  //run.getManyByType(allRunData);
+  auto allRunData = run.getMany<sumdata::RunData>();
   return allRunData.empty()? nullptr: allRunData.front().product();
 } // geo::GeometryConfigurationWriter::readRunData()
 
