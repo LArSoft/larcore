@@ -27,8 +27,7 @@
 #include "art/Framework/Services/Registry/ServiceScope.h"
 
 // Boost libraries
-#include <cetlib/quiet_unit_test.hpp> // BOOST_AUTO_TEST_CASE()
-#include <boost/test/test_tools.hpp> // BOOST_CHECK(), BOOST_CHECK_EQUAL()
+#include <boost/test/unit_test.hpp>
 
 //------------------------------------------------------------------------------
 //
@@ -163,7 +162,7 @@ BOOST_AUTO_TEST_CASE(providerFromTest) {
    // now let's create a "real" provider
    MyProvider prov;
    GlobalServices.myServicePtr = std::make_unique<MyService>(&prov);
-   BOOST_CHECK_EQUAL(lar::providerFrom<MyService>(), &prov);
+   BOOST_TEST(lar::providerFrom<MyService>() == &prov);
 
    // that's enough; let's clean up
    GlobalServices.myServicePtr.reset();
@@ -182,7 +181,7 @@ BOOST_AUTO_TEST_CASE(providersFromTest) {
    GlobalServices.yetAnotherServicePtr = std::make_unique<YetAnotherService>();
 
    auto provPack1 = lar::providersFrom<MyService>();
-   BOOST_CHECK_EQUAL(provPack1.get<MyProvider>(), &prov);
+   BOOST_TEST(provPack1.get<MyProvider>() == &prov);
    BOOST_CHECK_EXCEPTION(lar::providersFrom<MyOtherService>(), art::Exception,
      [](art::Exception const& e)
        { return e.categoryCode() == art::errors::NotFound; }
@@ -203,12 +202,10 @@ BOOST_AUTO_TEST_CASE(providersFromTest) {
    auto provPack
      = lar::providersFrom<MyService, MyOtherService, YetAnotherService>();
 
-   // not using BOOST_CHECK_EQUAL because we can't stream ProviderPacks
-   BOOST_CHECK((provPack == lar::makeProviderPack(&prov, &oprov, &yaprov)));
-
-   BOOST_CHECK_EQUAL(lar::providerFrom<MyService>(), &prov);
-   BOOST_CHECK_EQUAL(lar::providerFrom<MyOtherService>(), &oprov);
-   BOOST_CHECK_EQUAL(lar::providerFrom<YetAnotherService>(), &yaprov);
+   BOOST_TEST((provPack == lar::makeProviderPack(&prov, &oprov, &yaprov)));
+   BOOST_TEST(lar::providerFrom<MyService>() == &prov);
+   BOOST_TEST(lar::providerFrom<MyOtherService>() == &oprov);
+   BOOST_TEST(lar::providerFrom<YetAnotherService>() == &yaprov);
 
 
    // that's enough; let's clean up
