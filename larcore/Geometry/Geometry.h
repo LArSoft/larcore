@@ -34,7 +34,7 @@
 #include "fhiclcpp/ParameterSet.h"
 #include "art/Framework/Principal/Run.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
-#include "art/Framework/Services/Registry/ServiceMacros.h"
+#include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
 #include "art/Framework/Services/Registry/ServiceHandle.h" // for the convenience of includers
 
 // C/C++ standard libraries
@@ -108,16 +108,16 @@ namespace geo {
    *
    * Configuration consistency check
    * ================================
-   * 
+   *
    * The `Geometry` service checks that the input files were processed with a
    * configuration of `Geometry` service compatible with the current one.
-   * 
+   *
    * Two checks may be performed: the standard check, and a legacy check.
-   * 
-   * 
+   *
+   *
    * Consistency check
    * ------------------
-   * 
+   *
    * The `Geometry` service checks at the beginning of each run that the
    * current configuration is compatible with the geometry configuration
    * declared in the input file.
@@ -125,12 +125,12 @@ namespace geo {
    * `GeometryConfigurationWriter`, is run: this service is charged with writing
    * the configuration information into the output files, for the checks in
    * the future job.
-   * 
+   *
    * The compatibility check is currently very silly, but it can improved in
    * future versions. This check is the same as the legacy check, that verifies
    * that the configured detector name (`geo::GeometryCore::DetectorName()`)
    * has not changed.
-   * 
+   *
    * To allow this check to operate correctly, the only requirement is that
    * the service `GeometryConfigurationWriter` be included in the job:
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -139,21 +139,21 @@ namespace geo {
    * This must happen on the first job in the processing chain that configures
    * `Geometry` service. It is irrelevant, but not harmful, in the jobs that
    * follow.
-   * 
-   * 
+   *
+   *
    * ### Design details
-   * 
+   *
    * This section describes the full design of the check from a technical point
    * of view. Users do not need to understand the mechanisms of this check in
    * order to configure their jobs to successfully pass it.
-   * 
+   *
    * The check happens based on the data contained in the
    * `sumdata::GeometryConfigurationInfo` data product.
    * Starting from after the construction is complete, `geo::Geometry` is able
    * to provide at any time an instance of `sumdata::GeometryConfigurationInfo`
    * describing the geometry configuration for this job, whether the geometry
    * is already configured or not.
-   * 
+   *
    * The `Geometry` service loads the geometry at the beginning of the job.
    * At the start of each run from the input file, the `Geometry` service
    * reads a configuration information `sumdata::GeometryConfigurationInfo` from
@@ -161,7 +161,7 @@ namespace geo {
    * configuration. It is a fatal error for this information not to be available
    * in `art::Run`, and it is a fatal check failure if the available
    * information is not compatible with the current configuration.
-   * 
+   *
    * The `sumdata::GeometryConfigurationInfo` information is put into `art::Run`
    * record by the `geo::GeometryConfigurationWriter` producing service.
    * This service verifies whether there is already such information in the run.
@@ -175,10 +175,10 @@ namespace geo {
    * As legacy check, if there is no information in the
    * `sumdata::GeometryConfigurationInfo` form but there is a `sumdata::RunData`
    * data product, the latter is used as a base for the check.
-   * 
-   * 
+   *
+   *
    * Design notes:
-   * 
+   *
    * * the choice of delegating the writing of data product to a producing
    *   service rather than to modules is driven by the fact that there is a way
    *   to enforce this service to be actually run, and that no further
@@ -190,7 +190,7 @@ namespace geo {
    * * the information in `sumdata::GeometryConfigurationInfo` should be compact
    *   enough not to bloat the data files with very few events per run, as it
    *   may be for the selection of rare processes or signatures.
-   * 
+   *
    *
    */
   class Geometry: public GeometryCore
@@ -208,7 +208,7 @@ namespace geo {
     /// Returns the current geometry configuration information.
     sumdata::GeometryConfigurationInfo const& configurationInfo() const
       { return fConfInfo; }
-    
+
   private:
 
     /// Updates the geometry if needed at the beginning of each new run
@@ -223,27 +223,27 @@ namespace geo {
     // --- BEGIN -- Configuration information checks ---------------------------
     /// @name Configuration information checks
     /// @{
-    
+
     /// Fills the service configuration information into `fConfInfo`.
     void FillGeometryConfigurationInfo(fhicl::ParameterSet const& config);
-    
+
     /// Returns if the `other` configuration is compatible with our current.
     bool CheckConfigurationInfo
       (sumdata::GeometryConfigurationInfo const& other) const;
-    
+
     /// Reads and returns the geometry configuration information from the run.
     static sumdata::GeometryConfigurationInfo const& ReadConfigurationInfo
       (art::Run const& run);
-    
+
     /// Returns if `A` and `B` are compatible geometry service configurations.
     static bool CompareConfigurationInfo(
       sumdata::GeometryConfigurationInfo const& A,
       sumdata::GeometryConfigurationInfo const& B
       );
-    
+
     /// @}
     // --- END -- Configuration information checks -----------------------------
-    
+
     void InitializeChannelMap();
 
     std::string               fRelPath;          ///< Relative path added to FW_SEARCH_PATH to search for
@@ -254,9 +254,9 @@ namespace geo {
                                                  ///< files specified in the fcl file
     fhicl::ParameterSet       fSortingParameters;///< Parameter set to define the channel map sorting
     fhicl::ParameterSet       fBuilderParameters;///< Parameter set for geometry builder.
-    
+
     sumdata::GeometryConfigurationInfo fConfInfo;///< Summary of service configuration.
-    
+
   };
 
 } // namespace geo

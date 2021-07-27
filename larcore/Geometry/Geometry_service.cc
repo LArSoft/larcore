@@ -15,6 +15,7 @@
 // Framework includes
 #include "art/Framework/Principal/Run.h"
 #include "art/Framework/Principal/Handle.h"
+#include "art/Framework/Services/Registry/ServiceDefinitionMacros.h"
 #include "canvas/Utilities/InputTag.h"
 #include "canvas/Utilities/Exception.h"
 #include "fhiclcpp/types/Table.h"
@@ -42,12 +43,12 @@ namespace geo {
     , fSortingParameters(pset.get<fhicl::ParameterSet>("SortingParameters", fhicl::ParameterSet() ))
     , fBuilderParameters(pset.get<fhicl::ParameterSet>("Builder",          fhicl::ParameterSet() ))
   {
-    
+
     if (pset.has_key("ForceUseFCLOnly")) {
       throw art::Exception(art::errors::Configuration)
         << "Geometry service does not support `ForceUseFCLOnly` configuration parameter any more.\n";
     }
-    
+
     // add a final directory separator ("/") to fRelPath if not already there
     if (!fRelPath.empty() && (fRelPath.back() != '/')) fRelPath += '/';
 
@@ -65,7 +66,7 @@ namespace geo {
 
     // load the geometry
     LoadNewGeometry(GDMLFileName, ROOTFileName);
-    
+
     FillGeometryConfigurationInfo(pset);
 
   } // Geometry::Geometry()
@@ -73,7 +74,7 @@ namespace geo {
 
   void Geometry::preBeginRun(art::Run const& run)
   {
-    
+
     sumdata::GeometryConfigurationInfo const inputGeomInfo
       = ReadConfigurationInfo(run);
     if (!CheckConfigurationInfo(inputGeomInfo)) {
@@ -168,38 +169,38 @@ namespace geo {
   void Geometry::FillGeometryConfigurationInfo
     (fhicl::ParameterSet const& config)
   {
-    
+
     sumdata::GeometryConfigurationInfo confInfo;
     confInfo.dataVersion = sumdata::GeometryConfigurationInfo::DataVersion_t{2};
-    
+
     // version 1+:
     confInfo.detectorName = DetectorName();
-    
+
     // version 2+:
     confInfo.geometryServiceConfiguration = config.to_indented_string();
     fConfInfo = std::move(confInfo);
-    
+
     MF_LOG_TRACE("Geometry")
       << "Geometry configuration information:\n" << fConfInfo;
-    
+
   } // Geometry::FillGeometryConfigurationInfo()
 
   //......................................................................
   bool Geometry::CheckConfigurationInfo
     (sumdata::GeometryConfigurationInfo const& other) const
   {
-    
+
     MF_LOG_DEBUG("Geometry") << "New geometry information:\n" << other;
-    
+
     return CompareConfigurationInfo(fConfInfo, other);
-    
+
   } // Geometry::CheckConfigurationInfo()
-  
+
   //......................................................................
   sumdata::GeometryConfigurationInfo const& Geometry::ReadConfigurationInfo
     (art::Run const& run)
   {
-    
+
     try {
       return run.getProduct<sumdata::GeometryConfigurationInfo>
         (art::InputTag{"GeometryConfigurationWriter"});
@@ -212,10 +213,10 @@ namespace geo {
         e
         };
     }
-    
+
   } // Geometry::ReadConfigurationInfo()
-  
-  
+
+
   //......................................................................
   bool Geometry::CompareConfigurationInfo(
     sumdata::GeometryConfigurationInfo const& A,
@@ -224,12 +225,12 @@ namespace geo {
   {
     /*
      * Implemented criteria:
-     * 
+     *
      * * both informations must be valid
      * * the detector names must exactly match
-     * 
+     *
      */
-    
+
     if (!A.isDataValid()) {
       mf::LogWarning("Geometry") << "Geometry::CompareConfigurationInfo(): "
         "invalid version for configuration A:\n" << A;
@@ -240,19 +241,19 @@ namespace geo {
         "invalid version for configuration B:\n" << B;
       return false;
     }
-    
+
     // currently used only in debug mode (assert())
     [[maybe_unused]] auto const commonVersion = std::min(A.dataVersion, B.dataVersion);
-    
+
     assert(commonVersion >= 1);
-    
+
     if (A.detectorName != B.detectorName) { // case sensitive so far
       mf::LogWarning("Geometry") << "Geometry::CompareConfigurationInfo(): "
         "detector name mismatch: '" << A.detectorName << "' vs. '"
         << B.detectorName << "'";
       return false;
     }
-    
+
     return true;
   } // CompareConfigurationInfo()
 

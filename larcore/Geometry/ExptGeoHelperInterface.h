@@ -24,7 +24,7 @@
 
 
 // framework libraries
-#include "art/Framework/Services/Registry/ServiceMacros.h"
+#include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
 #include "fhiclcpp/ParameterSet.h"
 
 // C/C++ standard libraries

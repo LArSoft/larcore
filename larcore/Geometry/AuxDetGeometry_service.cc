@@ -13,6 +13,7 @@
 #include "larcoreobj/SummaryData/RunData.h"
 
 // Framework includes
+#include "art/Framework/Services/Registry/ServiceDefinitionMacros.h"
 #include "cetlib_except/exception.h"
 #include "cetlib/search_path.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"

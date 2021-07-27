@@ -12,6 +12,7 @@
 #include "larcorealg/Geometry/GeometryCore.h"
 
 // framework libraries
+#include "art/Framework/Services/Registry/ServiceDefinitionMacros.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
 namespace geo

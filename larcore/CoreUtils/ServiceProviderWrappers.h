@@ -26,7 +26,6 @@
 
 // framework and support libraries
 #include "art/Framework/Services/Registry/ServiceTable.h"
-#include "art/Framework/Services/Registry/ServiceMacros.h" // (for includers)
 
 // C/C++ standard libraries
 #include <memory> // std::unique_ptr<>
@@ -54,7 +53,6 @@ namespace lar {
     *     #include "larcore/CoreUtils/ServiceProviderWrappers.h"
     *     #include "path/to/MyProvider.h"
     *
-    *     #include "art/Framework/Services/Registry/ServiceMacros.h"
     *
     *     namespace myprov {
     *
@@ -187,7 +185,6 @@ namespace lar {
     *     #include "path/to/MyProviderA.h"
     *     #include "path/to/MyServiceInterface.h"
     *
-    *     #include "art/Framework/Services/Registry/ServiceMacros.h"
     *
     *     namespace myprov {
     *
