@@ -7,9 +7,9 @@ fcldir product_dir job
 gdmldir product_dir
 #
 product         version
-art_root_io	v1_08_02
+art_root_io	v1_08_03
 larcorealg	v09_30_00_rc0
-cetbuildtools	v8_10_01	-	only_for_build
+cetbuildtools	v8_11_02	-	only_for_build
 end_product_list
 
 
