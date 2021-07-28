@@ -34,6 +34,7 @@ find_ups_product( cetlib )
 find_ups_product( cetlib_except )
 find_ups_product(art_root_io)
 find_ups_product( messagefacility )
+find_ups_boost()
 find_ups_root()
 
 # macros for artdaq_dictionary and simple_plugin

@@ -5,7 +5,7 @@ add_subdirectory(VersionCheck)
 # test modules
 simple_plugin ( GeometryIteratorLoopTest "module"
                     larcorealg_Geometry
-                    GeometryTestLib
+                    larcorealg::GeometryTestLib
                     larcore_Geometry_Geometry_service
                     ${MF_MESSAGELOGGER}
                     
@@ -15,7 +15,7 @@ simple_plugin ( GeometryIteratorLoopTest "module"
 
 simple_plugin ( GeometryTest "module"
                     larcorealg_Geometry
-                    GeometryTestLib
+                    larcorealg::GeometryTestLib
                     larcore_Geometry_Geometry_service
                     ${MF_MESSAGELOGGER}
                     
