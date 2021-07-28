@@ -7,20 +7,20 @@ simple_plugin ( GeometryIteratorLoopTest "module"
                     larcorealg_Geometry
                     larcorealg::GeometryTestLib
                     larcore_Geometry_Geometry_service
-                    ${MF_MESSAGELOGGER}
+                    messagefacility::MF_MessageLogger
                     
-                    ${FHICLCPP}
-                    cetlib cetlib_except
+                    fhiclcpp::fhiclcpp
+                    cetlib::cetlib cetlib_except
              )
 
 simple_plugin ( GeometryTest "module"
                     larcorealg_Geometry
                     larcorealg::GeometryTestLib
                     larcore_Geometry_Geometry_service
-                    ${MF_MESSAGELOGGER}
+                    messagefacility::MF_MessageLogger
                     
-                    ${FHICLCPP}
-                    cetlib cetlib_except
+                    fhiclcpp::fhiclcpp
+                    cetlib::cetlib cetlib_except
                     ${ROOT_BASIC_LIB_LIST}
               )
 
