@@ -21,7 +21,6 @@ simple_plugin ( GeometryTest "module"
                     
                     fhiclcpp::fhiclcpp
                     cetlib::cetlib cetlib_except
-                    ${ROOT_BASIC_LIB_LIST}
               )
 
 # ------------------------------------------------------------------------------
