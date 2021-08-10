@@ -13,6 +13,7 @@
 
 // LArSoft libraries
 #include "larcore/Geometry/ExptGeoHelperInterface.h"
+#include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
 
 // C/C++ standard libraries
 #include <memory> // std::shared_ptr<>

@@ -25,6 +25,7 @@
 
 // framework libraries
 #include "fhiclcpp/ParameterSet.h"
+#include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
 
 // C/C++ standard libraries
 #include <memory> // std::unique_ptr<>
