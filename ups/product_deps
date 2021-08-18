@@ -1,6 +1,6 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent	larcore	v09_02_03
+parent	larcore	v09_02_04
 defaultqual	e20
 #
 fcldir product_dir job
@@ -8,7 +8,7 @@ gdmldir product_dir
 #
 product         version
 art_root_io	v1_05_03
-larcorealg	v09_02_00
+larcorealg	v09_02_01
 
 cetbuildtools	v7_17_01	-	only_for_build
 end_product_list
