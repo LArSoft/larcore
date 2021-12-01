@@ -7,8 +7,8 @@
 cet_test(ServiceUtil_test
   LIBRARIES
     art::Framework_Services_Registry
-    ${ART_UTILITIES}
-    ${CANVAS}
+    art::Utilities
+    canvas::canvas
     messagefacility::MF_MessageLogger
     fhiclcpp::fhiclcpp
     cetlib_except::cetlib_except
