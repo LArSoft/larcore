@@ -4,6 +4,8 @@
 #
 # ======================================================================
 
+find_package(Boost REQUIRED)
+
 cet_test(ServiceUtil_test
   LIBRARIES
     art::Framework_Services_Registry
