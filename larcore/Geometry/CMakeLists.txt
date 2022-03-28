@@ -12,7 +12,7 @@ art_make(SERVICE_LIBRARIES larcorealg_Geometry
                           messagefacility::MF_MessageLogger
                           ROOT::Core
                           ROOT::Geom
-                          ROOT::GenVector)
+                          ROOT::GenVector) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.06.01) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
 
 install_headers()
 install_fhicl()

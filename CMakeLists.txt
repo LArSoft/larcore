@@ -6,12 +6,13 @@
 #  buildtool [-I /install/path] -bt[i] -jN
 # ======================================================================
 
-cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
+# cmake_policy(VERSION 3.19) ### MIGRATE-ACTION-COMPATIBILITY (migrate-3.06.01) - Uncomment to preserve compatibility with older CMake versions
 
+find_package(cetmodules REQUIRED)
 project(larcore VERSION 09.04.01 LANGUAGES CXX)
 
 # cetbuildtools contains our cmake modules
-find_package(cetbuildtools REQUIRED)
 
 include(CetCMakeEnv)
 cet_cmake_env()
@@ -22,19 +23,19 @@ cet_set_compiler_flags(DIAGS CAUTIOUS
   EXTRA_FLAGS -pedantic -Wno-unused-local-typedefs
 )
 
-cet_report_compiler_flags()
+cet_report_compiler_flags() ### MIGRATE-ACTION-RECOMMENDED (migrate-3.06.01) - add args: REPORT_THRESHOLD VERBOSE
 
-find_package(cetlib_except REQUIRED PUBLIC)
-find_package(cetlib REQUIRED PUBLIC)
-find_package(messagefacility REQUIRED PUBLIC)
+find_package(cetlib_except REQUIRED EXPORT)
+find_package(cetlib REQUIRED EXPORT)
+find_package(messagefacility REQUIRED EXPORT)
 find_package(canvas_root_io REQUIRED)
-find_package(art REQUIRED PUBLIC)
-find_package(art_root_io REQUIRED PUBLIC)
-find_package(CLHEP COMPONENTS Geometry Vector REQUIRED PUBLIC)
-find_package(ROOT COMPONENTS Core Geom GenVector REQUIRED PUBLIC)
+find_package(art REQUIRED EXPORT)
+find_package(art_root_io REQUIRED EXPORT)
+find_package(CLHEP COMPONENTS Geometry Vector REQUIRED EXPORT)
+find_package(ROOT COMPONENTS Core Geom GenVector REQUIRED EXPORT)
 # these are minimum required versions, not the actual product versions
-find_ups_product( larcoreobj )
-find_ups_product( larcorealg )
+find_package( larcoreobj REQUIRED )
+find_package( larcorealg REQUIRED )
 
 # macros for artdaq_dictionary and simple_plugin
 include(ArtDictionary)
@@ -48,7 +49,6 @@ add_subdirectory(larcore)
 add_subdirectory(test)
 
 # ups - table and config files
-add_subdirectory(ups)
 
 # packaging utility
-include(UseCPack)
+cet_cmake_config()

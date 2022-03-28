@@ -11,7 +11,7 @@ simple_plugin ( GeometryIteratorLoopTest "module"
                     
                     fhiclcpp::fhiclcpp
                     cetlib::cetlib cetlib_except
-             )
+             ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.06.01) - deprecated: use cet_build_plugin() with explicit source lists and plugin base types
 
 simple_plugin ( GeometryTest "module"
                     larcorealg_Geometry
@@ -21,7 +21,7 @@ simple_plugin ( GeometryTest "module"
                     
                     fhiclcpp::fhiclcpp
                     cetlib::cetlib cetlib_except
-              )
+              ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.06.01) - deprecated: use cet_build_plugin() with explicit source lists and plugin base types
 
 # ------------------------------------------------------------------------------
 # geometry test on "standard" geometry
