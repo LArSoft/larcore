@@ -1,14 +1,16 @@
 cet_enable_asserts()
 
 # test modules
-simple_plugin ( GeometryInfoCheck "module"
+cet_build_plugin ( GeometryInfoCheck art::module
+  LIBRARIES
   larcore_Geometry_Geometry_service
   larcorealg::Geometry
-  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.06.01) - deprecated: use cet_build_plugin() with explicit source lists and plugin base types
+  )
 
-simple_plugin ( LegacyGeometryInfoWriter "module"
+cet_build_plugin ( LegacyGeometryInfoWriter art::module
+  LIBRARIES
   larcoreobj::SummaryData
-  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.06.01) - deprecated: use cet_build_plugin() with explicit source lists and plugin base types
+  )
 
 # ------------------------------------------------------------------------------
 

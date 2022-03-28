@@ -3,25 +3,27 @@ cet_enable_asserts()
 add_subdirectory(VersionCheck)
 
 # test modules
-simple_plugin ( GeometryIteratorLoopTest "module"
+cet_build_plugin ( GeometryIteratorLoopTest art::module
+                   LIBRARIES
                     larcorealg::Geometry
                     larcorealg::GeometryTestLib
                     larcore_Geometry_Geometry_service
                     messagefacility::MF_MessageLogger
-                    
                     fhiclcpp::fhiclcpp
-                    cetlib::cetlib cetlib_except
-             ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.06.01) - deprecated: use cet_build_plugin() with explicit source lists and plugin base types
+                    cetlib::cetlib
+                    cetlib_except::cetlib_except
+                 )
 
-simple_plugin ( GeometryTest "module"
+cet_build_plugin ( GeometryTest art::module
+                   LIBRARIES
                     larcorealg::Geometry
                     larcorealg::GeometryTestLib
                     larcore_Geometry_Geometry_service
                     messagefacility::MF_MessageLogger
-                    
                     fhiclcpp::fhiclcpp
-                    cetlib::cetlib cetlib_except
-              ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.06.01) - deprecated: use cet_build_plugin() with explicit source lists and plugin base types
+                    cetlib::cetlib
+                    cetlib_except::cetlib_except
+                 )
 
 # ------------------------------------------------------------------------------
 # geometry test on "standard" geometry
