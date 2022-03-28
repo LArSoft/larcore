@@ -4,7 +4,7 @@ add_subdirectory(VersionCheck)
 
 # test modules
 simple_plugin ( GeometryIteratorLoopTest "module"
-                    larcorealg_Geometry
+                    larcorealg::Geometry
                     larcorealg::GeometryTestLib
                     larcore_Geometry_Geometry_service
                     messagefacility::MF_MessageLogger
@@ -14,7 +14,7 @@ simple_plugin ( GeometryIteratorLoopTest "module"
              ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.06.01) - deprecated: use cet_build_plugin() with explicit source lists and plugin base types
 
 simple_plugin ( GeometryTest "module"
-                    larcorealg_Geometry
+                    larcorealg::Geometry
                     larcorealg::GeometryTestLib
                     larcore_Geometry_Geometry_service
                     messagefacility::MF_MessageLogger
