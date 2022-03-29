@@ -13,6 +13,7 @@
 
 // LArSoft libraries
 #include "larcore/Geometry/ExptGeoHelperInterface.h"
+#include "larcorealg/Geometry/ChannelMapStandardAlg.h"
 #include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
 
 // C/C++ standard libraries
