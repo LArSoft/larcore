@@ -4,7 +4,7 @@ add_subdirectory(VersionCheck)
 
 # test modules
 cet_build_plugin ( GeometryIteratorLoopTest art::module
-                   LIBRARIES
+                   LIBRARIES PRIVATE
                     larcorealg::Geometry
                     larcorealg::GeometryTestLib
                     larcore_Geometry_Geometry_service
@@ -15,7 +15,7 @@ cet_build_plugin ( GeometryIteratorLoopTest art::module
                  )
 
 cet_build_plugin ( GeometryTest art::module
-                   LIBRARIES
+                   LIBRARIES PRIVATE
                     larcorealg::Geometry
                     larcorealg::GeometryTestLib
                     larcore_Geometry_Geometry_service

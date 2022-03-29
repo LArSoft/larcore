@@ -2,13 +2,13 @@ cet_enable_asserts()
 
 # test modules
 cet_build_plugin ( GeometryInfoCheck art::module
-  LIBRARIES
+  LIBRARIES PRIVATE
   larcore_Geometry_Geometry_service
   larcorealg::Geometry
   )
 
 cet_build_plugin ( LegacyGeometryInfoWriter art::module
-  LIBRARIES
+  LIBRARIES PRIVATE
   larcoreobj::SummaryData
   )
 
