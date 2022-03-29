@@ -33,8 +33,8 @@ find_package(art_root_io REQUIRED EXPORT)
 find_package(CLHEP COMPONENTS Geometry Vector REQUIRED EXPORT)
 find_package(ROOT COMPONENTS Core Geom GenVector REQUIRED EXPORT)
 # these are minimum required versions, not the actual product versions
-find_package( larcoreobj REQUIRED )
-find_package( larcorealg REQUIRED )
+find_package( larcoreobj REQUIRED EXPORT)
+find_package( larcorealg REQUIRED EXPORT)
 
 # macros for artdaq_dictionary and simple_plugin
 include(ArtDictionary)
