@@ -8,7 +8,7 @@
 
 cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 
-find_package(cetmodules REQUIRED)
+find_package(cetmodules 3.12.00 REQUIRED)
 project(larcore VERSION 09.05.02 LANGUAGES CXX)
 
 # cetbuildtools contains our cmake modules
@@ -24,21 +24,19 @@ cet_set_compiler_flags(DIAGS CAUTIOUS
 
 cet_report_compiler_flags(REPORT_THRESHOLD VERBOSE)
 
-find_package(cetlib_except REQUIRED EXPORT)
-find_package(cetlib REQUIRED EXPORT)
-find_package(messagefacility REQUIRED EXPORT)
-find_package(canvas_root_io REQUIRED)
+cet_cmake_module_directories(Modules BINARY)
+
+find_package(larcoreobj REQUIRED EXPORT)
+find_package(larcorealg REQUIRED EXPORT)
+
 find_package(art REQUIRED EXPORT)
-find_package(art_root_io REQUIRED EXPORT)
-find_package(CLHEP COMPONENTS Geometry Vector REQUIRED EXPORT)
-find_package(ROOT COMPONENTS Core Geom GenVector REQUIRED EXPORT)
-# these are minimum required versions, not the actual product versions
-find_package( larcoreobj REQUIRED EXPORT)
-find_package( larcorealg REQUIRED EXPORT)
+find_package(canvas REQUIRED EXPORT)
+find_package(messagefacility REQUIRED EXPORT)
+find_package(fhiclcpp REQUIRED EXPORT)
+find_package(cetlib REQUIRED EXPORT)
+find_package(cetlib_except REQUIRED EXPORT)
 
 # macros for artdaq_dictionary and simple_plugin
-include(ArtDictionary)
-include(ArtMake)
 include(BuildPlugins)
 
 # source

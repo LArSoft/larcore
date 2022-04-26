@@ -24,19 +24,15 @@
 
 
 // framework libraries
-#include "fhiclcpp/ParameterSet.h"
 #include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
+namespace fhicl { class ParameterSet; }
 
 // C/C++ standard libraries
 #include <memory> // std::unique_ptr<>
 #include <vector>
 
-
-// prototypes of geometry classes
-namespace geo
-{
-  class AuxDetChannelMapAlg;
-}
+// LArSoft includes
+#include "larcorealg/Geometry/AuxDetChannelMapAlg.h"
 
 namespace geo
 {

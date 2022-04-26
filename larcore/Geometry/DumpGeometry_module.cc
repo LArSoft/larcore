@@ -6,9 +6,16 @@
  *
  */
 
+// LArSoft libraries
+#include "larcore/CoreUtils/ServiceUtil.h"
+#include "larcore/Geometry/Geometry.h"
+#include "larcorealg/Geometry/GeometryCore.h"
+
 // framework libraries
 #include "art/Framework/Core/EDAnalyzer.h"
 #include "art/Framework/Core/ModuleMacros.h"
+#include "art/Framework/Principal/Run.h"
+#include "messagefacility/MessageLogger/MessageLogger.h"
 #include "canvas/Persistency/Provenance/RunID.h"
 #include "fhiclcpp/types/Atom.h"
 #include "fhiclcpp/types/Comment.h"
@@ -19,7 +26,6 @@
 
 namespace geo {
   class DumpGeometry;
-  class GeometryCore;
 }
 
 /** ****************************************************************************
@@ -92,13 +98,6 @@ class geo::DumpGeometry: public art::EDAnalyzer {
 //==============================================================================
 //=== Module implementation
 //===
-
-// LArSoft libraries
-#include "larcore/Geometry/Geometry.h"
-#include "larcorealg/Geometry/GeometryCore.h"
-
-// framework libraries
-#include "messagefacility/MessageLogger/MessageLogger.h"
 
 //------------------------------------------------------------------------------
 geo::DumpGeometry::DumpGeometry(Parameters const& config)

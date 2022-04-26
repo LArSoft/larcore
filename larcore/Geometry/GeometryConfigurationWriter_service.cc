@@ -13,16 +13,16 @@
 #include "larcoreobj/SummaryData/RunData.h"
 
 // framework libraries
-#include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "art/Framework/Core/ProducingService.h"
-#include "art/Framework/Principal/Run.h"
 #include "art/Framework/Principal/Handle.h"
+#include "art/Framework/Principal/Run.h"
+#include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "canvas/Utilities/InputTag.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
 // C/C++ standard libraries
 #include <memory> // std::make_unique()
-
+#include <utility> // std::move()
 
 // -----------------------------------------------------------------------------
 namespace geo { class GeometryConfigurationWriter; }

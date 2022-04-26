@@ -17,26 +17,19 @@
 ///
 /// \author  rs@fnal.gov
 ////////////////////////////////////////////////////////////////////////////////
-
-
 #ifndef GEO_ExptGeoHelperInterface_h
 #define GEO_ExptGeoHelperInterface_h
 
+// LArSoft libraries
+#include "larcorealg/Geometry/ChannelMapAlg.h"
 
 // framework libraries
 #include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
-#include "fhiclcpp/ParameterSet.h"
+namespace fhicl { class ParameterSet; }
 
 // C/C++ standard libraries
-#include <memory> // std::shared_ptr<>
+#include <memory> // std::unique_ptr<>
 #include <string>
-#include <vector>
-
-// prototypes of geometry classes
-namespace geo
-{
-  class ChannelMapAlg;
-}
 
 namespace geo
 {

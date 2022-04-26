@@ -9,23 +9,28 @@
 #include "larcore/Geometry/Geometry.h"
 
 // lar includes
-#include "larcorealg/Geometry/GeometryBuilderStandard.h"
+#include "larcore/CoreUtils/ServiceUtil.h"
 #include "larcore/Geometry/ExptGeoHelperInterface.h"
+#include "larcoreobj/SummaryData/GeometryConfigurationInfo.h"
+#include "larcorealg/Geometry/GeometryBuilderStandard.h"
 
 // Framework includes
 #include "art/Framework/Principal/Run.h"
-#include "art/Framework/Principal/Handle.h"
+#include "art/Framework/Services/Registry/ActivityRegistry.h"
+#include "art/Framework/Services/Registry/ServiceHandle.h"
+#include "messagefacility/MessageLogger/MessageLogger.h"
 #include "canvas/Utilities/InputTag.h"
 #include "canvas/Utilities/Exception.h"
 #include "fhiclcpp/types/Table.h"
+#include "fhiclcpp/ParameterSet.h"
 #include "cetlib_except/exception.h"
 #include "cetlib/search_path.h"
-#include "messagefacility/MessageLogger/MessageLogger.h"
 
 // C/C++ standard libraries
-#include <string>
 #include <algorithm> // std::min()
 #include <cassert>
+#include <string>
+#include <utility> // std::move()
 
 // check that the requirements for geo::Geometry are satisfied
 template struct lar::details::ServiceRequirementsChecker<geo::Geometry>;

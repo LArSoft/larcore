@@ -17,34 +17,19 @@
 #define LARCORE_GEOMETRY_GEOMETRY_H
 
 // LArSoft libraries
-#include "larcore/CoreUtils/ServiceUtil.h" // not used; for user's convenience
 #include "larcorealg/Geometry/GeometryCore.h"
 #include "larcoreobj/SummaryData/GeometryConfigurationInfo.h"
 
-// the following are included for convenience only
-#include "larcorealg/Geometry/ChannelMapAlg.h"
-#include "larcorealg/Geometry/CryostatGeo.h"
-#include "larcorealg/Geometry/TPCGeo.h"
-#include "larcorealg/Geometry/PlaneGeo.h"
-#include "larcorealg/Geometry/WireGeo.h"
-#include "larcorealg/Geometry/OpDetGeo.h"
-#include "larcorealg/Geometry/AuxDetGeo.h"
-
 // framework libraries
-#include "fhiclcpp/ParameterSet.h"
-#include "art/Framework/Principal/Run.h"
-#include "art/Framework/Services/Registry/ActivityRegistry.h"
 #include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
-#include "art/Framework/Services/Registry/ServiceHandle.h" // for the convenience of includers
+namespace art {
+  class ActivityRegistry;
+  class Run;
+}
+#include "fhiclcpp/ParameterSet.h"
 
 // C/C++ standard libraries
-#include <vector>
-#include <map>
-#include <set>
-#include <cstring>
-#include <memory>
-#include <iterator> // std::forward_iterator_tag
-
+#include <string>
 
 namespace geo {
 

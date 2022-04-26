@@ -7,21 +7,27 @@
  */
 
 // LArSoft libraries
+#include "larcore/Geometry/Geometry.h"
+#include "larcorealg/Geometry/GeometryCore.h"
+#include "larcorealg/Geometry/OpDetGeo.h"
 #include "larcoreobj/SimpleTypesAndConstants/RawTypes.h" // raw::ChannelID_t
+#include "larcoreobj/SimpleTypesAndConstants/geo_types.h" // geo::WireID
 
 // framework libraries
+#include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "art/Framework/Core/EDAnalyzer.h"
 #include "art/Framework/Core/ModuleMacros.h"
+#include "canvas/Utilities/Exception.h"
+#include "messagefacility/MessageLogger/MessageLogger.h"
 #include "fhiclcpp/types/Atom.h"
+#include "fhiclcpp/types/Comment.h"
+#include "fhiclcpp/types/Name.h"
 
 // C/C++ standard libraries
 #include <string>
 
-// ... more follow
-
 namespace geo {
   class DumpChannelMap;
-  class GeometryCore;
 }
 
 /** ****************************************************************************
@@ -111,10 +117,10 @@ public:
   DumpChannelMap & operator = (DumpChannelMap &&) = delete;
 
   // Required functions
-  virtual void analyze(art::Event const&) override {}
+  void analyze(art::Event const&) override {}
 
   /// Drives the dumping
-  virtual void beginRun(art::Run const&) override;
+  void beginRun(art::Run const&) override;
 
     private:
 
@@ -132,11 +138,6 @@ public:
 //==============================================================================
 //=== Algorithms declaration
 //===
-
-namespace geo {
-  class GeometryCore;
-  class OpDetGeo;
-} // namespace geo
 
 namespace {
 
@@ -234,14 +235,6 @@ namespace {
 //=== Module implementation
 //===
 
-// LArSoft libraries
-#include "larcore/Geometry/Geometry.h"
-#include "larcorealg/Geometry/GeometryCore.h"
-#include "larcorealg/Geometry/OpDetGeo.h"
-
-// framework libraries
-#include "art/Framework/Services/Registry/ServiceHandle.h"
-
 //------------------------------------------------------------------------------
 geo::DumpChannelMap::DumpChannelMap(Parameters const& config)
   : art::EDAnalyzer(config)
@@ -282,22 +275,10 @@ void geo::DumpChannelMap::beginRun(art::Run const&) {
 
 } // geo::DumpChannelMap::beginRun()
 
-//------------------------------------------------------------------------------
-DEFINE_ART_MODULE(geo::DumpChannelMap)
-
 //==============================================================================
 //===  Algorithm implementation
 //===
 
-// LArSoft libraries
-#include "larcoreobj/SimpleTypesAndConstants/geo_types.h" // geo::WireID
-#include "larcorealg/Geometry/GeometryCore.h"
-
-// framework libraries
-#include "messagefacility/MessageLogger/MessageLogger.h"
-#include "canvas/Utilities/Exception.h"
-
-// C/C++ standard libraries
 
 //------------------------------------------------------------------------------
 //--- DumpChannelToWires
@@ -464,5 +445,4 @@ void DumpOpticalDetectorChannels::Dump(std::string OutputCategory) const {
 
 } // DumpOpticalDetectorChannels::Dump()
 
-
-//==============================================================================
+DEFINE_ART_MODULE(geo::DumpChannelMap)

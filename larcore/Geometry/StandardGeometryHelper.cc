@@ -9,10 +9,11 @@
 
 // LArSoft libraries
 #include "larcorealg/Geometry/ChannelMapStandardAlg.h"
-#include "larcorealg/Geometry/GeometryCore.h"
 
 // framework libraries
 #include "messagefacility/MessageLogger/MessageLogger.h"
+
+#include <memory>
 
 namespace geo
 {

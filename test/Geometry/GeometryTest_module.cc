@@ -6,7 +6,7 @@
  */
 
 // LArSoft includes
-#include "test/Geometry/GeometryTestAlg.h"
+#include "larcorealg/test/Geometry/GeometryTestAlg.h"
 #include "larcore/Geometry/Geometry.h"
 
 // Framework includes

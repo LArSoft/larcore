@@ -6,20 +6,23 @@
  */
 
 // class header
-#include "larcore/Geometry/AuxDetGeometry.h"
 #include "larcore/Geometry/AuxDetExptGeoHelperInterface.h"
+#include "larcore/Geometry/AuxDetGeometry.h"
 
 // lar includes
 #include "larcoreobj/SummaryData/RunData.h"
 
 // Framework includes
+#include "art/Framework/Principal/Run.h"
+#include "art/Framework/Services/Registry/ActivityRegistry.h"
+#include "art/Framework/Services/Registry/ServiceHandle.h"
+#include "messagefacility/MessageLogger/MessageLogger.h"
+#include "fhiclcpp/ParameterSet.h"
 #include "cetlib_except/exception.h"
 #include "cetlib/search_path.h"
-#include "messagefacility/MessageLogger/MessageLogger.h"
 
 // C/C++ standard libraries
 #include <string>
-
 
 namespace geo {
 

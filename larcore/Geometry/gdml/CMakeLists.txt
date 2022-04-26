@@ -1,4 +1,3 @@
-
 install_gdml( SUBDIRS GDMLSchema )
 
 # install gdml executables

@@ -3,27 +3,27 @@ cet_enable_asserts()
 add_subdirectory(VersionCheck)
 
 # test modules
-cet_build_plugin ( GeometryIteratorLoopTest art::module
-                   LIBRARIES PRIVATE
-                    larcorealg::Geometry
-                    larcorealg::GeometryTestLib
-                    larcore_Geometry_Geometry_service
-                    messagefacility::MF_MessageLogger
-                    fhiclcpp::fhiclcpp
-                    cetlib::cetlib
-                    cetlib_except::cetlib_except
-                 )
+cet_build_plugin(GeometryIteratorLoopTest art::module
+  LIBRARIES PRIVATE
+  larcorealg::Geometry
+  larcorealg::GeometryTestLib
+  larcore_Geometry_Geometry_service
+  messagefacility::MF_MessageLogger
+  fhiclcpp::fhiclcpp
+  cetlib::cetlib
+  cetlib_except::cetlib_except
+)
 
-cet_build_plugin ( GeometryTest art::module
-                   LIBRARIES PRIVATE
-                    larcorealg::Geometry
-                    larcorealg::GeometryTestLib
-                    larcore_Geometry_Geometry_service
-                    messagefacility::MF_MessageLogger
-                    fhiclcpp::fhiclcpp
-                    cetlib::cetlib
-                    cetlib_except::cetlib_except
-                 )
+cet_build_plugin(GeometryTest art::module
+  LIBRARIES PRIVATE
+  larcorealg::Geometry
+  larcorealg::GeometryTestLib
+  larcore_Geometry_Geometry_service
+  messagefacility::MF_MessageLogger
+  fhiclcpp::fhiclcpp
+  cetlib::cetlib
+  cetlib_except::cetlib_except
+)
 
 # ------------------------------------------------------------------------------
 # geometry test on "standard" geometry

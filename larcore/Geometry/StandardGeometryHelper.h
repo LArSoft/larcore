@@ -13,11 +13,9 @@
 
 // LArSoft libraries
 #include "larcore/Geometry/ExptGeoHelperInterface.h"
-#include "larcorealg/Geometry/ChannelMapStandardAlg.h"
-#include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
 
-// C/C++ standard libraries
-#include <memory> // std::shared_ptr<>
+// framework libraries
+#include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
 
 namespace geo
 {

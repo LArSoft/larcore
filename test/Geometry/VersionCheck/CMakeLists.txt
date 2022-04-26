@@ -1,16 +1,16 @@
 cet_enable_asserts()
 
 # test modules
-cet_build_plugin ( GeometryInfoCheck art::module
+cet_build_plugin(GeometryInfoCheck art::module NO_INSTALL
   LIBRARIES PRIVATE
   larcore_Geometry_Geometry_service
   larcorealg::Geometry
-  )
+)
 
-cet_build_plugin ( LegacyGeometryInfoWriter art::module
+cet_build_plugin(LegacyGeometryInfoWriter art::module NO_INSTALL
   LIBRARIES PRIVATE
   larcoreobj::SummaryData
-  )
+)
 
 # ------------------------------------------------------------------------------
 
@@ -180,5 +180,3 @@ cet_test(GeometryInfoCheckCompatible2 HANDBUILT
     DEPENDS GeometryInfoCheckCompatible
 )
 
-
-# ------------------------------------------------------------------------------

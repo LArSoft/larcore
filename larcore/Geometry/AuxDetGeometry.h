@@ -9,27 +9,19 @@
 #ifndef GEO_AUXDETGEOMETRY_H
 #define GEO_AUXDETGEOMETRY_H
 
-// LArSoft libraries
-
-// the following are included for convenience only
+// larsoft libraries
 #include "larcorealg/Geometry/AuxDetGeometryCore.h"
-#include "larcorealg/Geometry/AuxDetChannelMapAlg.h"
-#include "larcorealg/Geometry/AuxDetGeo.h"
 
 // framework libraries
-#include "fhiclcpp/ParameterSet.h"
-#include "art/Framework/Principal/Run.h"
-#include "art/Framework/Services/Registry/ActivityRegistry.h"
 #include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
-#include "art/Framework/Services/Registry/ServiceHandle.h" // for the convenience of includers
+namespace art {
+  class ActivityRegistry;
+  class Run;
+}
+#include "fhiclcpp/ParameterSet.h"
 
 // C/C++ standard libraries
-#include <vector>
-#include <map>
-#include <set>
-#include <cstring>
-#include <memory>
-#include <iterator> // std::forward_iterator_tag
+#include <string>
 
 
 namespace geo {
@@ -116,7 +108,6 @@ namespace geo {
 
     /// Returns a pointer to the service provider
     AuxDetGeometryCore* GetProviderPtr() { return &GetProvider(); }
-
 
     AuxDetGeometryCore fProvider; ///< the actual service provider
 
