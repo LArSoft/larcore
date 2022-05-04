@@ -1,4 +1,4 @@
-install_gdml( SUBDIRS GDMLSchema )
+install_gdml()
 
 # install gdml executables
 # NOTE: project variable GDML_DIR is defined after the install_gdml() call above.
