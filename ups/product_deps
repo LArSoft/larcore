@@ -249,8 +249,8 @@ gdmldir	product_dir
 ####################################
 product		version		qual	flags		<table_format=2>
 art_root_io	v1_08_03	-
-larcorealg	v09_06_03	-
-cetmodules	v3_12_00	-	only_for_build
+larcorealg	v09_06_04	-
+cetmodules	v3_13_00	-	only_for_build
 end_product_list
 ####################################
 
