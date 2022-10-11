@@ -6,20 +6,23 @@
  */
 
 // LArSoft includes
-#include "larcorealg/test/Geometry/GeometryTestAlg.h"
 #include "larcore/Geometry/Geometry.h"
+#include "larcorealg/test/Geometry/GeometryTestAlg.h"
 
 // Framework includes
-#include "art/Framework/Core/ModuleMacros.h"
 #include "art/Framework/Core/EDAnalyzer.h"
+#include "art/Framework/Core/ModuleMacros.h"
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 
 // C/C++ standard library
 #include <memory> // std::unique_ptr<>
 
-
-namespace art { class Event; } // art::Event declaration
-namespace fhicl { class ParameterSet; }
+namespace art {
+  class Event;
+} // art::Event declaration
+namespace fhicl {
+  class ParameterSet;
+}
 
 namespace geo {
   /**
@@ -30,31 +33,26 @@ namespace geo {
    *
    * See GeometryTestAlg.
    */
-  class GeometryTest: public art::EDAnalyzer {
-      public:
+  class GeometryTest : public art::EDAnalyzer {
+  public:
     explicit GeometryTest(fhicl::ParameterSet const& pset);
 
     virtual void analyze(art::Event const&) {}
     virtual void beginJob();
 
-      private:
-
+  private:
     std::unique_ptr<geo::GeometryTestAlg> tester; ///< the test algorithm
 
   }; // class GeometryTest
 } // namespace geo
-
 
 //******************************************************************************
 namespace geo {
 
   //......................................................................
   GeometryTest::GeometryTest(fhicl::ParameterSet const& pset)
-    : EDAnalyzer(pset)
-    , tester(new geo::GeometryTestAlg(pset))
-  {
-  } // GeometryTest::GeometryTest()
-
+    : EDAnalyzer(pset), tester(new geo::GeometryTestAlg(pset))
+  {} // GeometryTest::GeometryTest()
 
   //......................................................................
   void GeometryTest::beginJob()
@@ -68,7 +66,6 @@ namespace geo {
     tester->Run();
 
   } // GeometryTest::beginJob()
-
 
   //......................................................................
   DEFINE_ART_MODULE(GeometryTest)

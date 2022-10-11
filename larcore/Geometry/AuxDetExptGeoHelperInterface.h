@@ -18,14 +18,14 @@
 /// \author  rs@fnal.gov
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #ifndef GEO_AuxDetExptGeoHelperInterface_h
 #define GEO_AuxDetExptGeoHelperInterface_h
 
-
 // framework libraries
 #include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
-namespace fhicl { class ParameterSet; }
+namespace fhicl {
+  class ParameterSet;
+}
 
 // C/C++ standard libraries
 #include <memory> // std::unique_ptr<>
@@ -34,8 +34,7 @@ namespace fhicl { class ParameterSet; }
 // LArSoft includes
 #include "larcorealg/Geometry/AuxDetChannelMapAlg.h"
 
-namespace geo
-{
+namespace geo {
 
   /**
    * @brief Interface to a service with detector-specific geometry knowledge
@@ -53,8 +52,7 @@ namespace geo
    * The experiment-specific sub-classes should implement only the private
    * methods without promoting their visibility.
    */
-  class AuxDetExptGeoHelperInterface
-  {
+  class AuxDetExptGeoHelperInterface {
   public:
     using AuxDetChannelMapAlgPtr_t = std::unique_ptr<AuxDetChannelMapAlg>;
 
@@ -71,24 +69,21 @@ namespace geo
      * specified configuration, then it configures the geometry itself
      * according to the channel map (usually, it resorts the data).
      */
-    AuxDetChannelMapAlgPtr_t
-    ConfigureAuxDetChannelMapAlg(fhicl::ParameterSet const & sortingParameters) const;
+    AuxDetChannelMapAlgPtr_t ConfigureAuxDetChannelMapAlg(
+      fhicl::ParameterSet const& sortingParameters) const;
 
   private:
-
     /// Implementation of ConfigureChannelMapAlg (pure virtual)
-    virtual AuxDetChannelMapAlgPtr_t
-    doConfigureAuxDetChannelMapAlg(fhicl::ParameterSet const & sortingParameters) const = 0;
+    virtual AuxDetChannelMapAlgPtr_t doConfigureAuxDetChannelMapAlg(
+      fhicl::ParameterSet const& sortingParameters) const = 0;
 
   }; // end ExptGeoHelperInterface class declaration
 
-
-
   //-------------------------------------------------------------------------------------------
 
-  inline
-  AuxDetExptGeoHelperInterface::AuxDetChannelMapAlgPtr_t
-  AuxDetExptGeoHelperInterface::ConfigureAuxDetChannelMapAlg(fhicl::ParameterSet const& sortingParameters) const
+  inline AuxDetExptGeoHelperInterface::AuxDetChannelMapAlgPtr_t
+  AuxDetExptGeoHelperInterface::ConfigureAuxDetChannelMapAlg(
+    fhicl::ParameterSet const& sortingParameters) const
   {
     return doConfigureAuxDetChannelMapAlg(sortingParameters);
   }

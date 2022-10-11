@@ -15,22 +15,18 @@
 
 #include <memory>
 
-namespace geo
-{
+namespace geo {
 
   //----------------------------------------------------------------------------
-  StandardGeometryHelper::StandardGeometryHelper(fhicl::ParameterSet const&)
-  {}
+  StandardGeometryHelper::StandardGeometryHelper(fhicl::ParameterSet const&) {}
 
   //----------------------------------------------------------------------------
-  StandardGeometryHelper::ChannelMapAlgPtr_t
-  StandardGeometryHelper::doConfigureChannelMapAlg(fhicl::ParameterSet const& sortingParameters,
-                                                   std::string const& /*detectorName*/) const
+  StandardGeometryHelper::ChannelMapAlgPtr_t StandardGeometryHelper::doConfigureChannelMapAlg(
+    fhicl::ParameterSet const& sortingParameters,
+    std::string const& /*detectorName*/) const
   {
-    mf::LogInfo("StandardGeometryHelper")
-      << "Loading channel mapping: ChannelMapStandardAlg";
+    mf::LogInfo("StandardGeometryHelper") << "Loading channel mapping: ChannelMapStandardAlg";
     return std::make_unique<geo::ChannelMapStandardAlg>(sortingParameters);
   }
 
 } // namespace geo
-

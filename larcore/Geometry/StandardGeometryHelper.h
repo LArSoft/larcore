@@ -17,8 +17,7 @@
 // framework libraries
 #include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
 
-namespace geo
-{
+namespace geo {
   /**
    * @brief Simple implementation of channel mapping
    *
@@ -30,15 +29,12 @@ namespace geo
     explicit StandardGeometryHelper(fhicl::ParameterSet const& pset);
 
   private:
-    ChannelMapAlgPtr_t
-    doConfigureChannelMapAlg(fhicl::ParameterSet const& sortingParameters,
-                             std::string const& detectorName) const override;
+    ChannelMapAlgPtr_t doConfigureChannelMapAlg(fhicl::ParameterSet const& sortingParameters,
+                                                std::string const& detectorName) const override;
   };
 
 }
 
-DECLARE_ART_SERVICE_INTERFACE_IMPL(geo::StandardGeometryHelper,
-                                   geo::ExptGeoHelperInterface,
-                                   SHARED)
+DECLARE_ART_SERVICE_INTERFACE_IMPL(geo::StandardGeometryHelper, geo::ExptGeoHelperInterface, SHARED)
 
 #endif // GEO_StandardGeometryHelper_h

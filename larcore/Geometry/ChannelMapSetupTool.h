@@ -13,9 +13,8 @@
 // LArSoft libraries
 #include "larcorealg/Geometry/ChannelMapAlg.h"
 
-
 namespace geo {
-  
+
   /**
    * @brief Interface for a tool creating a channel mapping object.
    * 
@@ -23,11 +22,9 @@ namespace geo {
    * 
    */
   class ChannelMapSetupTool {
-      public:
-    
+  public:
     virtual ~ChannelMapSetupTool() noexcept = default;
-    
-    
+
     /**
      * @brief Returns a new instance of the channel mapping.
      * 
@@ -37,27 +34,21 @@ namespace geo {
      * For all other errors, the implementations are expected to throw
      * the proper exception.
      */
-    std::unique_ptr<geo::ChannelMapAlg> setupChannelMap()
-      { return doChannelMap(); }
-    
-    
-      protected:
-    
+    std::unique_ptr<geo::ChannelMapAlg> setupChannelMap() { return doChannelMap(); }
+
+  protected:
     // --- BEGIN -- Virtual interface ------------------------------------------
     /// @name Virtual interface
     /// @{
-    
+
     /// Returns a pointer to the channel mapping.
     virtual std::unique_ptr<geo::ChannelMapAlg> doChannelMap() = 0;
-    
+
     /// @}
     // --- END -- Virtual interface --------------------------------------------
-    
-    
-  }; // class ChannelMapSetupTool
-  
-  
-} // namespace geo
 
+  }; // class ChannelMapSetupTool
+
+} // namespace geo
 
 #endif // LARCORE_GEOMETRY_CHANNELMAPSETUPTOOL_H

@@ -178,32 +178,24 @@ namespace geo {
    *
    *
    */
-  class Geometry: public GeometryCore
-  {
+  class Geometry : public GeometryCore {
   public:
-
     using provider_type = GeometryCore; ///< type of service provider
 
     Geometry(fhicl::ParameterSet const& pset, art::ActivityRegistry& reg);
 
     /// Returns a pointer to the geometry service provider
-    provider_type const* provider() const
-      { return static_cast<provider_type const*>(this); }
+    provider_type const* provider() const { return static_cast<provider_type const*>(this); }
 
     /// Returns the current geometry configuration information.
-    sumdata::GeometryConfigurationInfo const& configurationInfo() const
-      { return fConfInfo; }
+    sumdata::GeometryConfigurationInfo const& configurationInfo() const { return fConfInfo; }
 
   private:
-
     /// Updates the geometry if needed at the beginning of each new run
     void preBeginRun(art::Run const& run);
 
     /// Expands the provided paths and loads the geometry description(s)
-    void LoadNewGeometry(
-      std::string gdmlfile, std::string rootfile,
-      bool bForceReload = false
-      );
+    void LoadNewGeometry(std::string gdmlfile, std::string rootfile, bool bForceReload = false);
 
     // --- BEGIN -- Configuration information checks ---------------------------
     /// @name Configuration information checks
@@ -213,35 +205,30 @@ namespace geo {
     void FillGeometryConfigurationInfo(fhicl::ParameterSet const& config);
 
     /// Returns if the `other` configuration is compatible with our current.
-    bool CheckConfigurationInfo
-      (sumdata::GeometryConfigurationInfo const& other) const;
+    bool CheckConfigurationInfo(sumdata::GeometryConfigurationInfo const& other) const;
 
     /// Reads and returns the geometry configuration information from the run.
-    static sumdata::GeometryConfigurationInfo const& ReadConfigurationInfo
-      (art::Run const& run);
+    static sumdata::GeometryConfigurationInfo const& ReadConfigurationInfo(art::Run const& run);
 
     /// Returns if `A` and `B` are compatible geometry service configurations.
-    static bool CompareConfigurationInfo(
-      sumdata::GeometryConfigurationInfo const& A,
-      sumdata::GeometryConfigurationInfo const& B
-      );
+    static bool CompareConfigurationInfo(sumdata::GeometryConfigurationInfo const& A,
+                                         sumdata::GeometryConfigurationInfo const& B);
 
     /// @}
     // --- END -- Configuration information checks -----------------------------
 
     void InitializeChannelMap();
 
-    std::string               fRelPath;          ///< Relative path added to FW_SEARCH_PATH to search for
-                                                 ///< geometry file
-    bool                      fDisableWiresInG4; ///< If set true, supply G4 with GDMLfileNoWires
-                                                 ///< rather than GDMLfile
-    bool                      fNonFatalConfCheck;///< Don't stop if configuration check fails.
-                                                 ///< files specified in the fcl file
-    fhicl::ParameterSet       fSortingParameters;///< Parameter set to define the channel map sorting
-    fhicl::ParameterSet       fBuilderParameters;///< Parameter set for geometry builder.
+    std::string fRelPath;                   ///< Relative path added to FW_SEARCH_PATH to search for
+                                            ///< geometry file
+    bool fDisableWiresInG4;                 ///< If set true, supply G4 with GDMLfileNoWires
+                                            ///< rather than GDMLfile
+    bool fNonFatalConfCheck;                ///< Don't stop if configuration check fails.
+                                            ///< files specified in the fcl file
+    fhicl::ParameterSet fSortingParameters; ///< Parameter set to define the channel map sorting
+    fhicl::ParameterSet fBuilderParameters; ///< Parameter set for geometry builder.
 
-    sumdata::GeometryConfigurationInfo fConfInfo;///< Summary of service configuration.
-
+    sumdata::GeometryConfigurationInfo fConfInfo; ///< Summary of service configuration.
   };
 
 } // namespace geo

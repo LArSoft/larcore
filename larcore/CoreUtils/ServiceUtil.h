@@ -20,8 +20,8 @@
 #define LARCORE_COREUTILS_SERVICEUTIL_H
 
 // LArSoft libraries
-#include "larcorealg/CoreUtils/UncopiableAndUnmovableClass.h"
 #include "larcorealg/CoreUtils/ProviderPack.h"
+#include "larcorealg/CoreUtils/UncopiableAndUnmovableClass.h"
 
 // framework libraries
 #include "art/Framework/Services/Registry/ServiceHandle.h"
@@ -31,7 +31,6 @@
 // C/C++ standard libraries
 #include <type_traits> // std::decay<>, std::is_same<>, std::add_const_t<>
 #include <typeinfo>
-
 
 namespace lar {
 
@@ -43,7 +42,6 @@ namespace lar {
     struct ProviderPackExtractor;
 
   } // namespace details
-
 
   /** **************************************************************************
    * @brief Returns a constant pointer to the provider of specified service.
@@ -75,25 +73,24 @@ namespace lar {
    */
   template <typename T>
   typename T::provider_type const* providerFrom()
-    {
-      using Service_t = std::add_const_t<T>;
-      using Provider_t = typename Service_t::provider_type;
-      
-      (void) details::ServiceRequirementsChecker<Service_t>();
+  {
+    using Service_t = std::add_const_t<T>;
+    using Provider_t = typename Service_t::provider_type;
 
-      // retrieve the provider
-      art::ServiceHandle<Service_t> h;
-      Provider_t const* const pProvider { h->provider() };
-      if (!pProvider) {
-        throw art::Exception(art::errors::NotFound)
-          << "ServiceHandle <" << cet::demangle_symbol(typeid(Service_t).name())
-          << "> offered a null provider";
-      }
+    (void)details::ServiceRequirementsChecker<Service_t>();
 
-      return pProvider;
+    // retrieve the provider
+    art::ServiceHandle<Service_t> h;
+    Provider_t const* const pProvider{h->provider()};
+    if (!pProvider) {
+      throw art::Exception(art::errors::NotFound)
+        << "ServiceHandle <" << cet::demangle_symbol(typeid(Service_t).name())
+        << "> offered a null provider";
+    }
 
-    } // providerFrom()
+    return pProvider;
 
+  } // providerFrom()
 
   /** **************************************************************************
    * @brief Returns a lar::ProviderPack with providers from all services
@@ -124,8 +121,9 @@ namespace lar {
    */
   template <typename... Services>
   auto providersFrom()
-    { return details::ProviderPackExtractor<Services...>::parameterPack(); }
-
+  {
+    return details::ProviderPackExtractor<Services...>::parameterPack();
+  }
 
   /** **************************************************************************
    * @brief Type of a provider pack with a provider from each of the Services
@@ -138,10 +136,7 @@ namespace lar {
    *
    */
   template <typename... Services>
-  using providersFrom_t
-    = lar::ProviderPack<typename Services::provider_type...>;
-
-
+  using providersFrom_t = lar::ProviderPack<typename Services::provider_type...>;
 
   //----------------------------------------------------------------------------
   namespace details {
@@ -152,25 +147,16 @@ namespace lar {
       using provider_type = PROVIDER;
 
       // static checks on provider class: not copiable nor movable
-      static_assert(
-        !std::is_copy_constructible<provider_type>::value,
-        "Service provider classes must not be copiable"
-        );
-      static_assert(
-        !std::is_copy_assignable<provider_type>::value,
-        "Service provider classes must not be copiable"
-        );
-      static_assert(
-        !std::is_move_constructible<provider_type>::value,
-        "Service provider classes must not be movable"
-        );
-      static_assert(
-        !std::is_move_assignable<provider_type>::value,
-        "Service provider classes must not be movable"
-        );
+      static_assert(!std::is_copy_constructible<provider_type>::value,
+                    "Service provider classes must not be copiable");
+      static_assert(!std::is_copy_assignable<provider_type>::value,
+                    "Service provider classes must not be copiable");
+      static_assert(!std::is_move_constructible<provider_type>::value,
+                    "Service provider classes must not be movable");
+      static_assert(!std::is_move_assignable<provider_type>::value,
+                    "Service provider classes must not be movable");
 
     }; // ServiceProviderRequirementsChecker
-
 
     template <typename SERVICE>
     struct ServiceRequirementsChecker {
@@ -185,36 +171,25 @@ namespace lar {
       ServiceProviderRequirementsChecker<provider_type> provider_checker;
 
       // check the provider() method
-      static_assert(
-        std::is_same<decltype(&SERVICE::provider), provider_func_type>::value,
-        "provider() method has unsupported signature"
-        );
+      static_assert(std::is_same<decltype(&SERVICE::provider), provider_func_type>::value,
+                    "provider() method has unsupported signature");
 
     }; // ServiceRequirementsChecker
-
 
     //--------------------------------------------------------------------------
     template <typename First, typename... Others>
     struct ProviderPackExtractor<First, Others...> {
-      static ProviderPack<
-        typename First::provider_type, typename Others::provider_type...
-        >
-        parameterPack()
-        {
-          return {
-            ProviderPackExtractor<Others...>::parameterPack(),
-            lar::providerFrom<First>()
-            };
-        }
+      static ProviderPack<typename First::provider_type, typename Others::provider_type...>
+      parameterPack()
+      {
+        return {ProviderPackExtractor<Others...>::parameterPack(), lar::providerFrom<First>()};
+      }
     };
-
 
     template <typename Service>
     struct ProviderPackExtractor<Service> {
-       static auto parameterPack()
-          { return lar::makeProviderPack(lar::providerFrom<Service>()); }
+      static auto parameterPack() { return lar::makeProviderPack(lar::providerFrom<Service>()); }
     };
-
 
   } // namespace details
 

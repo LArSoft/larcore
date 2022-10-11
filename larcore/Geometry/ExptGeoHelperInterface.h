@@ -25,14 +25,15 @@
 
 // framework libraries
 #include "art/Framework/Services/Registry/ServiceDeclarationMacros.h"
-namespace fhicl { class ParameterSet; }
+namespace fhicl {
+  class ParameterSet;
+}
 
 // C/C++ standard libraries
 #include <memory> // std::unique_ptr<>
 #include <string>
 
-namespace geo
-{
+namespace geo {
 
   /**
    * @brief Interface to a service with detector-specific geometry knowledge
@@ -51,8 +52,7 @@ namespace geo
    * The experiment-specific sub-classes should implement only the private
    * methods without promoting their visibility.
    */
-  class ExptGeoHelperInterface
-  {
+  class ExptGeoHelperInterface {
   public:
     using ChannelMapAlgPtr_t = std::unique_ptr<ChannelMapAlg>;
 
@@ -68,19 +68,16 @@ namespace geo
      * This method creates a new ChannelMapAlg according to the geometry and
      * specified configuration.
      */
-    ChannelMapAlgPtr_t
-    ConfigureChannelMapAlg(fhicl::ParameterSet const& sortingParameters,
-                           std::string const& detectorName) const
+    ChannelMapAlgPtr_t ConfigureChannelMapAlg(fhicl::ParameterSet const& sortingParameters,
+                                              std::string const& detectorName) const
     {
       return doConfigureChannelMapAlg(sortingParameters, detectorName);
     }
 
   private:
-
-    virtual
-    ChannelMapAlgPtr_t
-    doConfigureChannelMapAlg(fhicl::ParameterSet const& sortingParameters,
-                             std::string const& detectorName) const = 0;
+    virtual ChannelMapAlgPtr_t doConfigureChannelMapAlg(
+      fhicl::ParameterSet const& sortingParameters,
+      std::string const& detectorName) const = 0;
 
   }; // end ExptGeoHelperInterface class declaration
 

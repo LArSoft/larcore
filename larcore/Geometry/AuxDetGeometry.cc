@@ -6,8 +6,8 @@
  */
 
 // class header
-#include "larcore/Geometry/AuxDetExptGeoHelperInterface.h"
 #include "larcore/Geometry/AuxDetGeometry.h"
+#include "larcore/Geometry/AuxDetExptGeoHelperInterface.h"
 
 // lar includes
 #include "larcoreobj/SummaryData/RunData.h"
@@ -16,23 +16,22 @@
 #include "art/Framework/Principal/Run.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
 #include "art/Framework/Services/Registry/ServiceHandle.h"
-#include "messagefacility/MessageLogger/MessageLogger.h"
-#include "fhiclcpp/ParameterSet.h"
-#include "cetlib_except/exception.h"
 #include "cetlib/search_path.h"
+#include "cetlib_except/exception.h"
+#include "fhiclcpp/ParameterSet.h"
+#include "messagefacility/MessageLogger/MessageLogger.h"
 
 // C/C++ standard libraries
 #include <string>
 
 namespace geo {
 
-
   //......................................................................
   // Constructor.
-  AuxDetGeometry::AuxDetGeometry(fhicl::ParameterSet const& pset, art::ActivityRegistry &reg)
-    : fProvider         (pset)
-    , fRelPath          (pset.get< std::string       >("RelativePath",      ""   ))
-    , fForceUseFCLOnly  (pset.get< bool              >("ForceUseFCLOnly" ,  false))
+  AuxDetGeometry::AuxDetGeometry(fhicl::ParameterSet const& pset, art::ActivityRegistry& reg)
+    : fProvider(pset)
+    , fRelPath(pset.get<std::string>("RelativePath", ""))
+    , fForceUseFCLOnly(pset.get<bool>("ForceUseFCLOnly", false))
     , fSortingParameters(pset.get<fhicl::ParameterSet>("SortingParameters", {}))
   {
     // add a final directory separator ("/") to fRelPath if not already there
@@ -55,7 +54,6 @@ namespace geo {
 
   } // Geometry::Geometry()
 
-
   void AuxDetGeometry::preBeginRun(art::Run const& run)
   {
     // FIXME this seems utterly wrong: constructor loads geometry based on an
@@ -70,9 +68,10 @@ namespace geo {
     //run.getManyByType(rdcol);
     auto rdcol = run.getMany<sumdata::RunData>();
     if (rdcol.empty()) {
-      mf::LogWarning("LoadNewGeometry") << "cannot find sumdata::RunData object to grab detector name\n"
-                                        << "this is expected if generating MC files\n"
-                                        << "using default geometry from configuration file\n";
+      mf::LogWarning("LoadNewGeometry")
+        << "cannot find sumdata::RunData object to grab detector name\n"
+        << "this is expected if generating MC files\n"
+        << "using default geometry from configuration file\n";
       return;
     }
 
@@ -85,19 +84,17 @@ namespace geo {
     //   SetDetectorName(newDetectorName);
     // }
 
-    LoadNewGeometry(
-      GetProvider().DetectorName() + ".gdml",
-      GetProvider().DetectorName() + ".gdml"
-      );
+    LoadNewGeometry(GetProvider().DetectorName() + ".gdml", GetProvider().DetectorName() + ".gdml");
   } // Geometry::preBeginRun()
-
 
   //......................................................................
   void AuxDetGeometry::InitializeChannelMap()
   {
     // the channel map is responsible of calling the channel map configuration
     // of the geometry
-    auto channelMap = art::ServiceHandle<geo::AuxDetExptGeoHelperInterface>()->ConfigureAuxDetChannelMapAlg(fSortingParameters);
+    auto channelMap =
+      art::ServiceHandle<geo::AuxDetExptGeoHelperInterface>()->ConfigureAuxDetChannelMapAlg(
+        fSortingParameters);
     if (!channelMap) {
       throw cet::exception("ChannelMapLoadFail") << " failed to load new channel map";
     }
@@ -121,17 +118,17 @@ namespace geo {
     cet::search_path sp("FW_SEARCH_PATH");
 
     std::string GDMLfile;
-    if( !sp.find_file(GDMLFileName, GDMLfile) ) {
+    if (!sp.find_file(GDMLFileName, GDMLfile)) {
       throw cet::exception("AuxDetGeometry") << "cannot find the gdml geometry file:"
-                                             << "\n" << GDMLFileName
-                                             << "\nbail ungracefully.\n";
+                                             << "\n"
+                                             << GDMLFileName << "\nbail ungracefully.\n";
     }
 
     std::string ROOTfile;
-    if( !sp.find_file(ROOTFileName, ROOTfile) ) {
+    if (!sp.find_file(ROOTFileName, ROOTfile)) {
       throw cet::exception("AuxDetGeometry") << "cannot find the root geometry file:\n"
-                                             << "\n" << ROOTFileName
-                                             << "\nbail ungracefully.\n";
+                                             << "\n"
+                                             << ROOTFileName << "\nbail ungracefully.\n";
     }
 
     // initialize the geometry with the files we have found

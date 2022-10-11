@@ -20,7 +20,6 @@
 #ifndef LARCORE_COREUTILS_SERVICEPROVIDERWRAPPERS_H
 #define LARCORE_COREUTILS_SERVICEPROVIDERWRAPPERS_H 1
 
-
 // LArSoft libraries
 #include "larcore/CoreUtils/ServiceUtil.h" // lar::providerFrom() (for includers)
 
@@ -30,15 +29,17 @@
 // C/C++ standard libraries
 #include <memory> // std::unique_ptr<>
 
-
 // forward declarations
-namespace art { class ActivityRegistry; }
-namespace fhicl { class ParameterSet; }
-
+namespace art {
+  class ActivityRegistry;
+}
+namespace fhicl {
+  class ParameterSet;
+}
 
 namespace lar {
 
-   /** **********************************************************************
+  /** **********************************************************************
     * @brief Service returning a provider
     * @tparam PROVIDER type of service provider to be returned
     *
@@ -84,36 +85,29 @@ namespace lar {
     *   The provider should be configured by that constructor.
     *
     */
-   template <class PROVIDER>
-   class SimpleServiceProviderWrapper {
+  template <class PROVIDER>
+  class SimpleServiceProviderWrapper {
 
-         public:
-      using provider_type = PROVIDER; ///< type of the service provider
+  public:
+    using provider_type = PROVIDER; ///< type of the service provider
 
-      /// Type of configuration parameter (for art description)
-      using Parameters = art::ServiceTable<typename provider_type::Config>;
+    /// Type of configuration parameter (for art description)
+    using Parameters = art::ServiceTable<typename provider_type::Config>;
 
+    /// Constructor (using a configuration table)
+    SimpleServiceProviderWrapper(Parameters const& config, art::ActivityRegistry&)
+      : prov(std::make_unique<provider_type>(config()))
+    {}
 
-      /// Constructor (using a configuration table)
-      SimpleServiceProviderWrapper
-         (Parameters const& config, art::ActivityRegistry&)
-         : prov(std::make_unique<provider_type>(config()))
-         {}
+    /// Returns a constant pointer to the service provider
+    provider_type const* provider() const { return prov.get(); }
 
+  private:
+    std::unique_ptr<provider_type> prov; ///< service provider
 
-      /// Returns a constant pointer to the service provider
-      provider_type const* provider() const { return prov.get(); }
+  }; // SimpleServiceProviderWrapper<>
 
-
-         private:
-
-      std::unique_ptr<provider_type> prov; ///< service provider
-
-   }; // SimpleServiceProviderWrapper<>
-
-
-
-   /** **********************************************************************
+  /** **********************************************************************
     * @brief Service returning a provider interface
     * @tparam PROVIDER type of service provider interface to be returned
     * @see ServiceProviderImplementationWrapper
@@ -128,30 +122,25 @@ namespace lar {
     * `provider()` will forward to the caller.
     *
     */
-   template <class PROVIDER>
-   class ServiceProviderInterfaceWrapper {
+  template <class PROVIDER>
+  class ServiceProviderInterfaceWrapper {
 
-         public:
-      using provider_type = PROVIDER; ///< type of the service provider
+  public:
+    using provider_type = PROVIDER; ///< type of the service provider
 
-      /// Virtual destructor
-      virtual ~ServiceProviderInterfaceWrapper() = default;
+    /// Virtual destructor
+    virtual ~ServiceProviderInterfaceWrapper() = default;
 
+    /// Returns a constant pointer to the service provider interface
+    provider_type const* provider() const { return do_provider(); }
 
-      /// Returns a constant pointer to the service provider interface
-      provider_type const* provider() const { return do_provider(); }
+  protected:
+    /// Implementation of the provider() function, to be overridden
+    virtual provider_type const* do_provider() const = 0;
 
+  }; // ServiceProviderInterfaceWrapper<>
 
-         protected:
-
-      /// Implementation of the provider() function, to be overridden
-      virtual provider_type const* do_provider() const = 0;
-
-   }; // ServiceProviderInterfaceWrapper<>
-
-
-
-   /** *************************************************************************
+  /** *************************************************************************
     * @brief Service implementation returning a provider
     * @tparam INTERFACE type of art service being implemented
     * @tparam PROVIDER type of service provider to be returned
@@ -231,42 +220,35 @@ namespace lar {
     *   is expected to happen; this method is overridden
     *
     */
-   template <typename PROVIDER, typename INTERFACE>
-   class ServiceProviderImplementationWrapper: public INTERFACE {
+  template <typename PROVIDER, typename INTERFACE>
+  class ServiceProviderImplementationWrapper : public INTERFACE {
 
-         public:
-      /// type of service provider implementation
-      using concrete_provider_type = PROVIDER;
+  public:
+    /// type of service provider implementation
+    using concrete_provider_type = PROVIDER;
 
-      /// art service interface class
-      using service_interface_type = INTERFACE;
+    /// art service interface class
+    using service_interface_type = INTERFACE;
 
-      /// type of service provider interface
-      using provider_type = typename service_interface_type::provider_type;
+    /// type of service provider interface
+    using provider_type = typename service_interface_type::provider_type;
 
-      /// Type of configuration parameter (for art description)
-      using Parameters
-        = art::ServiceTable<typename concrete_provider_type::Config>;
+    /// Type of configuration parameter (for art description)
+    using Parameters = art::ServiceTable<typename concrete_provider_type::Config>;
 
+    /// Constructor (using a configuration table)
+    ServiceProviderImplementationWrapper(Parameters const& config, art::ActivityRegistry&)
+      : prov(std::make_unique<concrete_provider_type>(config()))
+    {}
 
-      /// Constructor (using a configuration table)
-      ServiceProviderImplementationWrapper
-         (Parameters const& config, art::ActivityRegistry&)
-         : prov(std::make_unique<concrete_provider_type>(config()))
-         {}
+  private:
+    std::unique_ptr<concrete_provider_type> prov; ///< service provider
 
+    /// Returns a constant pointer to the service provider
+    virtual provider_type const* do_provider() const override { return prov.get(); }
 
-         private:
-      std::unique_ptr<concrete_provider_type> prov; ///< service provider
-
-      /// Returns a constant pointer to the service provider
-      virtual provider_type const* do_provider() const override
-         { return prov.get(); }
-
-   }; // ServiceProviderImplementationWrapper
-
+  }; // ServiceProviderImplementationWrapper
 
 } // namespace lar
-
 
 #endif // LARCORE_COREUTILS_SERVICEPROVIDERWRAPPERS_H

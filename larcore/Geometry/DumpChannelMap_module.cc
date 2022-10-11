@@ -10,18 +10,18 @@
 #include "larcore/Geometry/Geometry.h"
 #include "larcorealg/Geometry/GeometryCore.h"
 #include "larcorealg/Geometry/OpDetGeo.h"
-#include "larcoreobj/SimpleTypesAndConstants/RawTypes.h" // raw::ChannelID_t
+#include "larcoreobj/SimpleTypesAndConstants/RawTypes.h"  // raw::ChannelID_t
 #include "larcoreobj/SimpleTypesAndConstants/geo_types.h" // geo::WireID
 
 // framework libraries
-#include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "art/Framework/Core/EDAnalyzer.h"
 #include "art/Framework/Core/ModuleMacros.h"
+#include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "canvas/Utilities/Exception.h"
-#include "messagefacility/MessageLogger/MessageLogger.h"
 #include "fhiclcpp/types/Atom.h"
 #include "fhiclcpp/types/Comment.h"
 #include "fhiclcpp/types/Name.h"
+#include "messagefacility/MessageLogger/MessageLogger.h"
 
 // C/C++ standard libraries
 #include <string>
@@ -54,67 +54,52 @@ namespace geo {
  *
  */
 
-
-class geo::DumpChannelMap: public art::EDAnalyzer {
+class geo::DumpChannelMap : public art::EDAnalyzer {
 public:
-  
   /// Module configuration.
   struct Config {
     using Name = fhicl::Name;
     using Comment = fhicl::Comment;
-    
-    fhicl::Atom<std::string> OutputCategory {
+
+    fhicl::Atom<std::string> OutputCategory{
       Name("OutputCategory"),
-      Comment(
-        "output category used by the message facility to output information (INFO level)"
-        ),
-      "DumpChannelMap"
-      };
-    
-    fhicl::Atom<bool> ChannelToWires {
-      Name("ChannelToWires"),
-      Comment("print all the wires corresponding to each channel"),
-      true
-      };
-    
-    fhicl::Atom<bool> WireToChannel {
-      Name("WireToChannel"),
-      Comment("print which channel covers each wire"),
-      false
-      };
-    
-    fhicl::Atom<bool> OpDetChannels {
+      Comment("output category used by the message facility to output information (INFO level)"),
+      "DumpChannelMap"};
+
+    fhicl::Atom<bool> ChannelToWires{Name("ChannelToWires"),
+                                     Comment("print all the wires corresponding to each channel"),
+                                     true};
+
+    fhicl::Atom<bool> WireToChannel{Name("WireToChannel"),
+                                    Comment("print which channel covers each wire"),
+                                    false};
+
+    fhicl::Atom<bool> OpDetChannels{
       Name("OpDetChannels"),
-      Comment(
-        "print for each optical detector channel ID the optical detector ID and its center"
-        ),
-      false
-      };
-    
-    fhicl::Atom<raw::ChannelID_t> FirstChannel {
+      Comment("print for each optical detector channel ID the optical detector ID and its center"),
+      false};
+
+    fhicl::Atom<raw::ChannelID_t> FirstChannel{
       Name("FirstChannel"),
       Comment("ID of the lowest channel to be printed (default: no limit)"),
-      raw::InvalidChannelID
-      };
-    
-    fhicl::Atom<raw::ChannelID_t> LastChannel {
+      raw::InvalidChannelID};
+
+    fhicl::Atom<raw::ChannelID_t> LastChannel{
       Name("LastChannel"),
       Comment("ID of the highest channel to be printed (default: no limit)"),
-      raw::InvalidChannelID
-      };
-    
+      raw::InvalidChannelID};
+
   }; // Config
-  
+
   using Parameters = art::EDAnalyzer::Table<Config>;
-  
-  
+
   explicit DumpChannelMap(Parameters const& config);
 
   // Plugins should not be copied or assigned.
-  DumpChannelMap(DumpChannelMap const &) = delete;
-  DumpChannelMap(DumpChannelMap &&) = delete;
-  DumpChannelMap & operator = (DumpChannelMap const &) = delete;
-  DumpChannelMap & operator = (DumpChannelMap &&) = delete;
+  DumpChannelMap(DumpChannelMap const&) = delete;
+  DumpChannelMap(DumpChannelMap&&) = delete;
+  DumpChannelMap& operator=(DumpChannelMap const&) = delete;
+  DumpChannelMap& operator=(DumpChannelMap&&) = delete;
 
   // Required functions
   void analyze(art::Event const&) override {}
@@ -122,18 +107,16 @@ public:
   /// Drives the dumping
   void beginRun(art::Run const&) override;
 
-    private:
-
+private:
   std::string OutputCategory; ///< Name of the category for output.
-  bool DoChannelToWires; ///< Dump channel -> wires mapping.
-  bool DoWireToChannel; ///< Dump wire -> channel mapping.
-  bool DoOpDetChannels; ///< Dump optical detector channel -> optical detector.
+  bool DoChannelToWires;      ///< Dump channel -> wires mapping.
+  bool DoWireToChannel;       ///< Dump wire -> channel mapping.
+  bool DoOpDetChannels;       ///< Dump optical detector channel -> optical detector.
 
   raw::ChannelID_t FirstChannel; ///< First channel to be printed.
-  raw::ChannelID_t LastChannel; ///< Last channel to be printed.
+  raw::ChannelID_t LastChannel;  ///< Last channel to be printed.
 
 }; // geo::DumpChannelMap
-
 
 //==============================================================================
 //=== Algorithms declaration
@@ -143,55 +126,48 @@ namespace {
 
   /// Dumps channel-to-wires mapping
   class DumpChannelToWires {
-      public:
-
+  public:
     /// Constructor; includes a working default configuration
-    DumpChannelToWires()
-      : FirstChannel(raw::InvalidChannelID)
-      , LastChannel(raw::InvalidChannelID)
-      {}
+    DumpChannelToWires() : FirstChannel(raw::InvalidChannelID), LastChannel(raw::InvalidChannelID)
+    {}
 
     /// Sets up the required environment
-    void Setup(geo::GeometryCore const& geometry)
-      { pGeom = &geometry; }
+    void Setup(geo::GeometryCore const& geometry) { pGeom = &geometry; }
 
     /// Sets the lowest and highest channel ID to be printed (inclusive)
-    void SetLimits
-      (raw::ChannelID_t first_channel, raw::ChannelID_t last_channel)
-      { FirstChannel = first_channel; LastChannel = last_channel; }
+    void SetLimits(raw::ChannelID_t first_channel, raw::ChannelID_t last_channel)
+    {
+      FirstChannel = first_channel;
+      LastChannel = last_channel;
+    }
 
     /// Dumps to the specified output category
     void Dump(std::string OutputCategory) const;
 
-
-      protected:
+  protected:
     geo::GeometryCore const* pGeom = nullptr; ///< pointer to geometry
 
     raw::ChannelID_t FirstChannel; ///< lowest channel to be printed
-    raw::ChannelID_t LastChannel; ///< highest channel to be printed
+    raw::ChannelID_t LastChannel;  ///< highest channel to be printed
 
     /// Throws an exception if the object is not ready to dump
     void CheckConfig() const;
 
   }; // class DumpChannelToWires
 
-
   /// Dumps wire-to-channel mapping
   class DumpWireToChannel {
-      public:
-
+  public:
     /// Constructor; includes a working default configuration
     DumpWireToChannel() {}
 
     /// Sets up the required environment
-    void Setup(geo::GeometryCore const& geometry)
-      { pGeom = &geometry; }
+    void Setup(geo::GeometryCore const& geometry) { pGeom = &geometry; }
 
     /// Dumps to the specified output category
     void Dump(std::string OutputCategory) const;
 
-
-      protected:
+  protected:
     geo::GeometryCore const* pGeom = nullptr; ///< pointer to geometry
 
     /// Throws an exception if the object is not ready to dump
@@ -199,23 +175,19 @@ namespace {
 
   }; // class DumpWireToChannel
 
-
   /// Dumps optical detector channel-to-optical detector mapping.
   class DumpOpticalDetectorChannels {
-      public:
-
+  public:
     /// Constructor; includes a working default configuration
     DumpOpticalDetectorChannels() {}
 
     /// Sets up the required environment
-    void Setup(geo::GeometryCore const& geometry)
-      { pGeom = &geometry; }
+    void Setup(geo::GeometryCore const& geometry) { pGeom = &geometry; }
 
     /// Dumps to the specified output category
     void Dump(std::string OutputCategory) const;
 
-
-      protected:
+  protected:
     geo::GeometryCore const* pGeom = nullptr; ///< pointer to geometry
 
     /// Throws an exception if the object is not ready to dump
@@ -224,12 +196,10 @@ namespace {
     /// Returns the optical detector serving `channelID`,
     /// `nullptr` if not found.
     geo::OpDetGeo const* getOpticalDetector(unsigned int channelID) const;
-    
+
   }; // class DumpOpticalDetectorChannels
 
-
 } // local namespace
-
 
 //==============================================================================
 //=== Module implementation
@@ -238,18 +208,17 @@ namespace {
 //------------------------------------------------------------------------------
 geo::DumpChannelMap::DumpChannelMap(Parameters const& config)
   : art::EDAnalyzer(config)
-  , OutputCategory  (config().OutputCategory())
+  , OutputCategory(config().OutputCategory())
   , DoChannelToWires(config().ChannelToWires())
-  , DoWireToChannel (config().WireToChannel())
-  , DoOpDetChannels (config().OpDetChannels())
-  , FirstChannel    (config().FirstChannel())
-  , LastChannel     (config().LastChannel())
-{
-
-} // geo::DumpChannelMap::DumpChannelMap()
+  , DoWireToChannel(config().WireToChannel())
+  , DoOpDetChannels(config().OpDetChannels())
+  , FirstChannel(config().FirstChannel())
+  , LastChannel(config().LastChannel())
+{} // geo::DumpChannelMap::DumpChannelMap()
 
 //------------------------------------------------------------------------------
-void geo::DumpChannelMap::beginRun(art::Run const&) {
+void geo::DumpChannelMap::beginRun(art::Run const&)
+{
 
   geo::GeometryCore const& geom = *(art::ServiceHandle<geo::Geometry const>());
 
@@ -263,7 +232,7 @@ void geo::DumpChannelMap::beginRun(art::Run const&) {
   if (DoWireToChannel) {
     DumpWireToChannel dumper;
     dumper.Setup(geom);
-  //  dumper.SetLimits(FirstChannel, LastChannel);
+    //  dumper.SetLimits(FirstChannel, LastChannel);
     dumper.Dump(OutputCategory);
   }
 
@@ -279,11 +248,11 @@ void geo::DumpChannelMap::beginRun(art::Run const&) {
 //===  Algorithm implementation
 //===
 
-
 //------------------------------------------------------------------------------
 //--- DumpChannelToWires
 //------------------------------------------------------------------------------
-void DumpChannelToWires::CheckConfig() const {
+void DumpChannelToWires::CheckConfig() const
+{
 
   /// check that the configuration is complete
   if (!pGeom) {
@@ -293,7 +262,8 @@ void DumpChannelToWires::CheckConfig() const {
 } // DumpChannelToWires::CheckConfig()
 
 //------------------------------------------------------------------------------
-void DumpChannelToWires::Dump(std::string OutputCategory) const {
+void DumpChannelToWires::Dump(std::string OutputCategory) const
+{
 
   /// check that the configuration is complete
   CheckConfig();
@@ -302,15 +272,14 @@ void DumpChannelToWires::Dump(std::string OutputCategory) const {
   unsigned int const NChannels = pGeom->Nchannels();
 
   if (NChannels == 0) {
-    mf::LogError(OutputCategory)
-      << "Nice detector we have here, with no channels.";
+    mf::LogError(OutputCategory) << "Nice detector we have here, with no channels.";
     return;
   }
 
-  raw::ChannelID_t const PrintFirst
-    = raw::isValidChannelID(FirstChannel)? FirstChannel: raw::ChannelID_t(0);
-  raw::ChannelID_t const PrintLast
-    = raw::isValidChannelID(LastChannel)? LastChannel: raw::ChannelID_t(NChannels-1);
+  raw::ChannelID_t const PrintFirst =
+    raw::isValidChannelID(FirstChannel) ? FirstChannel : raw::ChannelID_t(0);
+  raw::ChannelID_t const PrintLast =
+    raw::isValidChannelID(LastChannel) ? LastChannel : raw::ChannelID_t(NChannels - 1);
 
   // print intro
   unsigned int const NPrintedChannels = (PrintLast - PrintFirst) + 1;
@@ -318,9 +287,9 @@ void DumpChannelToWires::Dump(std::string OutputCategory) const {
     mf::LogInfo(OutputCategory) << "Printing all " << NChannels << " channels";
   }
   else {
-    mf::LogInfo(OutputCategory) << "Printing channels from " << PrintFirst
-      << " to " << LastChannel << " (" << NPrintedChannels
-      << " channels out of " << NChannels << ")";
+    mf::LogInfo(OutputCategory) << "Printing channels from " << PrintFirst << " to " << LastChannel
+                                << " (" << NPrintedChannels << " channels out of " << NChannels
+                                << ")";
   }
 
   // print map
@@ -328,14 +297,14 @@ void DumpChannelToWires::Dump(std::string OutputCategory) const {
   for (raw::ChannelID_t channel = PrintFirst; channel <= PrintLast; ++channel) {
     std::vector<geo::WireID> const Wires = pGeom->ChannelToWire(channel);
 
-    log << "\n " << ((int) channel) << " ->";
+    log << "\n " << ((int)channel) << " ->";
     switch (Wires.size()) {
-      case 0:  log << " no wires";                       break;
-      case 1:                                            break;
-      default: log << " [" << Wires.size() << " wires]"; break;
+    case 0: log << " no wires"; break;
+    case 1: break;
+    default: log << " [" << Wires.size() << " wires]"; break;
     } // switch
 
-    for (geo::WireID const& wireID: Wires)
+    for (geo::WireID const& wireID : Wires)
       log << " { " << std::string(wireID) << " };";
 
   } // for (channels)
@@ -345,7 +314,8 @@ void DumpChannelToWires::Dump(std::string OutputCategory) const {
 //------------------------------------------------------------------------------
 //--- DumpWireToChannel
 //------------------------------------------------------------------------------
-void DumpWireToChannel::CheckConfig() const {
+void DumpWireToChannel::CheckConfig() const
+{
 
   /// check that the configuration is complete
   if (!pGeom) {
@@ -355,7 +325,8 @@ void DumpWireToChannel::CheckConfig() const {
 } // DumpWireToChannel::CheckConfig()
 
 //------------------------------------------------------------------------------
-void DumpWireToChannel::Dump(std::string OutputCategory) const {
+void DumpWireToChannel::Dump(std::string OutputCategory) const
+{
 
   /// check that the configuration is complete
   CheckConfig();
@@ -364,31 +335,31 @@ void DumpWireToChannel::Dump(std::string OutputCategory) const {
   unsigned int const NChannels = pGeom->Nchannels();
 
   if (NChannels == 0) {
-    mf::LogError(OutputCategory)
-      << "Nice detector we have here, with no channels.";
+    mf::LogError(OutputCategory) << "Nice detector we have here, with no channels.";
     return;
   }
 
   // print intro
-  mf::LogInfo(OutputCategory)
-    << "Printing wire channels for up to " << NChannels << " channels";
+  mf::LogInfo(OutputCategory) << "Printing wire channels for up to " << NChannels << " channels";
 
   // print map
   mf::LogVerbatim log(OutputCategory);
-  for (geo::WireID const& wireID: pGeom->IterateWireIDs()) {
+  for (geo::WireID const& wireID : pGeom->IterateWireIDs()) {
     raw::ChannelID_t channel = pGeom->PlaneWireToChannel(wireID);
     log << "\n { " << std::string(wireID) << " } => ";
-    if (raw::isValidChannelID(channel)) log << channel;
-    else                                log << "invalid!";
+    if (raw::isValidChannelID(channel))
+      log << channel;
+    else
+      log << "invalid!";
   } // for
 
 } // DumpWireToChannel::Dump()
 
-
 //------------------------------------------------------------------------------
 //--- DumpOpticalDetectorChannels
 //------------------------------------------------------------------------------
-void DumpOpticalDetectorChannels::CheckConfig() const {
+void DumpOpticalDetectorChannels::CheckConfig() const
+{
 
   /// check that the configuration is complete
   if (!pGeom) {
@@ -397,10 +368,8 @@ void DumpOpticalDetectorChannels::CheckConfig() const {
   }
 } // DumpOpticalDetectorChannels::CheckConfig()
 
-
 //------------------------------------------------------------------------------
-geo::OpDetGeo const* DumpOpticalDetectorChannels::getOpticalDetector
-  (unsigned int channelID) const
+geo::OpDetGeo const* DumpOpticalDetectorChannels::getOpticalDetector(unsigned int channelID) const
 {
   try {
     return &(pGeom->OpDetGeoFromOpChannel(channelID));
@@ -410,26 +379,24 @@ geo::OpDetGeo const* DumpOpticalDetectorChannels::getOpticalDetector
   }
 } // DumpOpticalDetectorChannels::getOpticalDetector()
 
-
 //------------------------------------------------------------------------------
-void DumpOpticalDetectorChannels::Dump(std::string OutputCategory) const {
+void DumpOpticalDetectorChannels::Dump(std::string OutputCategory) const
+{
 
   /// check that the configuration is complete
   CheckConfig();
-  
-  
+
   /// extract general channel range information
   unsigned int const NChannels = pGeom->NOpChannels();
 
   if (NChannels == 0) {
-    mf::LogError(OutputCategory)
-      << "Nice detector we have here, with no optical channels.";
+    mf::LogError(OutputCategory) << "Nice detector we have here, with no optical channels.";
     return;
   }
 
   // print intro
-  mf::LogInfo(OutputCategory)
-    << "Printing optical detectors for up to " << NChannels << " channels";
+  mf::LogInfo(OutputCategory) << "Printing optical detectors for up to " << NChannels
+                              << " channels";
 
   // print map
   mf::LogVerbatim log(OutputCategory);

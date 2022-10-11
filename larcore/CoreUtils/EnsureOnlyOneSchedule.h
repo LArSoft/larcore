@@ -29,8 +29,10 @@ namespace lar {
     {
       if (auto const nschedules = art::Globals::instance()->nschedules(); nschedules > 1) {
         throw art::Exception{art::errors::Configuration}
-        << "This job uses " << nschedules << " schedules, but the type '" << cet::demangle_symbol(typeid(T).name()) << " supports\n"
-        << "processing only one event at a time. Please reconfigure your job to use only one schedule.\n";
+          << "This job uses " << nschedules << " schedules, but the type '"
+          << cet::demangle_symbol(typeid(T).name()) << " supports\n"
+          << "processing only one event at a time. Please reconfigure your job to use only one "
+             "schedule.\n";
       }
     }
   };

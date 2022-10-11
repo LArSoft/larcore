@@ -1,26 +1,23 @@
-typedef struct _drawopt 
-{
+typedef struct _drawopt {
   const char* volume;
-  int         color;
+  int color;
 } drawopt;
 
-voltpc_geo(TString volName="")
+voltpc_geo(TString volName = "")
 {
   gSystem->Load("libGeom");
   gSystem->Load("libGdml");
 
   TGeoManager::Import("voltpc.gdml");
 
-  drawopt optuboone[] = {
-    {"volWorld",        0},
-    {"volDetEnclosure", kWhite},
-    {"volCryostat",     kOrange},
-    {"volTPC",          kOrange-5},
-    {"volTPCBackWall",  kRed},
-    {"volTPCVertWall",  kCyan-5},
-    {"volTPCHorizWall", kOrange},
-    {0, 0}
-  };
+  drawopt optuboone[] = {{"volWorld", 0},
+                         {"volDetEnclosure", kWhite},
+                         {"volCryostat", kOrange},
+                         {"volTPC", kOrange - 5},
+                         {"volTPCBackWall", kRed},
+                         {"volTPCVertWall", kCyan - 5},
+                         {"volTPCHorizWall", kOrange},
+                         {0, 0}};
 
   // for (int i=0;; ++i) {
   //   if (optuboone[i].volume==0) break;
@@ -28,7 +25,7 @@ voltpc_geo(TString volName="")
   // }
   TList* mat = gGeoManager->GetListOfMaterials();
   TIter next(mat);
-  TObject *obj;
+  TObject* obj;
   while (obj = next()) {
     obj->Print();
   }
@@ -38,16 +35,16 @@ voltpc_geo(TString volName="")
   gGeoManager->PrintOverlaps();
   gGeoManager->SetMaxVisNodes(70000);
 
-  TGeoVolume *TPC = gGeoManager->FindVolumeFast("volTPC");
+  TGeoVolume* TPC = gGeoManager->FindVolumeFast("volTPC");
   float m_tpc = TPC->Weight();
 
   gGeoManager->FindVolumeFast("volWorld")->Draw("ogl");
 
   //gGeoManager->GetTopVolume()->Draw();
-  if ( ! volName.IsNull() ) gGeoManager->FindVolumeFast(volName)->Draw("ogl");
+  if (!volName.IsNull()) gGeoManager->FindVolumeFast(volName)->Draw("ogl");
 
-  TFile *tf = new TFile("voltpc.root", "RECREATE");
- 
+  TFile* tf = new TFile("voltpc.root", "RECREATE");
+
   gGeoManager->Write();
 
   tf->Close();

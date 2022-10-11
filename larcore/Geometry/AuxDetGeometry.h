@@ -23,7 +23,6 @@ namespace art {
 // C/C++ standard libraries
 #include <string>
 
-
 namespace geo {
 
   /**
@@ -81,10 +80,8 @@ namespace geo {
    * ROOT for the internal geometry representation.
    *
    */
-  class AuxDetGeometry
-  {
+  class AuxDetGeometry {
   public:
-
     AuxDetGeometry(fhicl::ParameterSet const& pset, art::ActivityRegistry& reg);
 
     /// Returns a constant reference to the service provider
@@ -94,7 +91,6 @@ namespace geo {
     AuxDetGeometryCore const* GetProviderPtr() const { return &GetProvider(); }
 
   private:
-
     /// Updates the geometry if needed at the beginning of each new run
     void preBeginRun(art::Run const& run);
 
@@ -111,11 +107,11 @@ namespace geo {
 
     AuxDetGeometryCore fProvider; ///< the actual service provider
 
-    std::string               fRelPath;          ///< Relative path added to FW_SEARCH_PATH to search for
-                                                 ///< geometry file
-    bool                      fForceUseFCLOnly;  ///< Force Geometry to only use the geometry
-                                                 ///< files specified in the fcl file
-    fhicl::ParameterSet       fSortingParameters;///< Parameter set to define the channel map sorting
+    std::string fRelPath;                   ///< Relative path added to FW_SEARCH_PATH to search for
+                                            ///< geometry file
+    bool fForceUseFCLOnly;                  ///< Force Geometry to only use the geometry
+                                            ///< files specified in the fcl file
+    fhicl::ParameterSet fSortingParameters; ///< Parameter set to define the channel map sorting
   };
 
 } // namespace geo

@@ -11,20 +11,20 @@
 // lar includes
 #include "larcore/CoreUtils/ServiceUtil.h"
 #include "larcore/Geometry/ExptGeoHelperInterface.h"
-#include "larcoreobj/SummaryData/GeometryConfigurationInfo.h"
 #include "larcorealg/Geometry/GeometryBuilderStandard.h"
+#include "larcoreobj/SummaryData/GeometryConfigurationInfo.h"
 
 // Framework includes
 #include "art/Framework/Principal/Run.h"
 #include "art/Framework/Services/Registry/ActivityRegistry.h"
 #include "art/Framework/Services/Registry/ServiceHandle.h"
-#include "messagefacility/MessageLogger/MessageLogger.h"
-#include "canvas/Utilities/InputTag.h"
 #include "canvas/Utilities/Exception.h"
-#include "fhiclcpp/types/Table.h"
-#include "fhiclcpp/ParameterSet.h"
-#include "cetlib_except/exception.h"
+#include "canvas/Utilities/InputTag.h"
 #include "cetlib/search_path.h"
+#include "cetlib_except/exception.h"
+#include "fhiclcpp/ParameterSet.h"
+#include "fhiclcpp/types/Table.h"
+#include "messagefacility/MessageLogger/MessageLogger.h"
 
 // C/C++ standard libraries
 #include <algorithm> // std::min()
@@ -39,18 +39,19 @@ namespace geo {
 
   //......................................................................
   // Constructor.
-  Geometry::Geometry(fhicl::ParameterSet const& pset, art::ActivityRegistry &reg)
+  Geometry::Geometry(fhicl::ParameterSet const& pset, art::ActivityRegistry& reg)
     : GeometryCore(pset)
-    , fRelPath          (pset.get< std::string       >("RelativePath",     ""   ))
-    , fDisableWiresInG4 (pset.get< bool              >("DisableWiresInG4", false))
-    , fNonFatalConfCheck(pset.get< bool              >("SkipConfigurationCheck", false))
-    , fSortingParameters(pset.get<fhicl::ParameterSet>("SortingParameters", fhicl::ParameterSet() ))
-    , fBuilderParameters(pset.get<fhicl::ParameterSet>("Builder",          fhicl::ParameterSet() ))
+    , fRelPath(pset.get<std::string>("RelativePath", ""))
+    , fDisableWiresInG4(pset.get<bool>("DisableWiresInG4", false))
+    , fNonFatalConfCheck(pset.get<bool>("SkipConfigurationCheck", false))
+    , fSortingParameters(pset.get<fhicl::ParameterSet>("SortingParameters", fhicl::ParameterSet()))
+    , fBuilderParameters(pset.get<fhicl::ParameterSet>("Builder", fhicl::ParameterSet()))
   {
 
     if (pset.has_key("ForceUseFCLOnly")) {
       throw art::Exception(art::errors::Configuration)
-        << "Geometry service does not support `ForceUseFCLOnly` configuration parameter any more.\n";
+        << "Geometry service does not support `ForceUseFCLOnly` configuration parameter any "
+           "more.\n";
     }
 
     // add a final directory separator ("/") to fRelPath if not already there
@@ -75,33 +76,27 @@ namespace geo {
 
   } // Geometry::Geometry()
 
-
   void Geometry::preBeginRun(art::Run const& run)
   {
 
-    sumdata::GeometryConfigurationInfo const inputGeomInfo
-      = ReadConfigurationInfo(run);
+    sumdata::GeometryConfigurationInfo const inputGeomInfo = ReadConfigurationInfo(run);
     if (!CheckConfigurationInfo(inputGeomInfo)) {
       if (fNonFatalConfCheck) {
         // disable the non-fatal option if you need the details
         mf::LogWarning("Geometry") << "Geometry used for " << run.id()
-          << " is incompatible with the one configured in the job.";
+                                   << " is incompatible with the one configured in the job.";
       }
       else {
         throw cet::exception("Geometry")
           << "Geometry used for run " << run.id()
           << " is incompatible with the one configured in the job!"
-          << "\n=== job configuration " << std::string(50, '=')
-          << "\n" << fConfInfo
-          << "\n=== run configuration " << std::string(50, '=')
-          << "\n" << inputGeomInfo
-          << "\n======================" << std::string(50, '=')
-          << "\n";
+          << "\n=== job configuration " << std::string(50, '=') << "\n"
+          << fConfInfo << "\n=== run configuration " << std::string(50, '=') << "\n"
+          << inputGeomInfo << "\n======================" << std::string(50, '=') << "\n";
       }
     }
 
   } // Geometry::preBeginRun()
-
 
   //......................................................................
   void Geometry::InitializeChannelMap()
@@ -109,20 +104,19 @@ namespace geo {
     // the channel map is responsible of calling the channel map configuration
     // of the geometry
     art::ServiceHandle<geo::ExptGeoHelperInterface const> helper{};
-    auto channelMapAlg = helper->ConfigureChannelMapAlg(fSortingParameters,
-                                                        DetectorName());
+    auto channelMapAlg = helper->ConfigureChannelMapAlg(fSortingParameters, DetectorName());
     if (!channelMapAlg) {
-      throw cet::exception("ChannelMapLoadFail")
-        << " failed to load new channel map";
+      throw cet::exception("ChannelMapLoadFail") << " failed to load new channel map";
     }
     ApplyChannelMap(move(channelMapAlg));
   } // Geometry::InitializeChannelMap()
 
   //......................................................................
-  void Geometry::LoadNewGeometry(
-    std::string gdmlfile, std::string /* rootfile */,
-    bool bForceReload /* = false */
-  ) {
+  void Geometry::LoadNewGeometry(std::string gdmlfile,
+                                 std::string /* rootfile */,
+                                 bool bForceReload /* = false */
+  )
+  {
     // start with the relative path
     std::string GDMLFileName(fRelPath), ROOTFileName(fRelPath);
 
@@ -131,8 +125,7 @@ namespace geo {
     GDMLFileName.append(gdmlfile);
 
     // special for GDML if geometry with no wires is used for Geant4 simulation
-    if(fDisableWiresInG4)
-      GDMLFileName.insert(GDMLFileName.find(".gdml"), "_nowires");
+    if (fDisableWiresInG4) GDMLFileName.insert(GDMLFileName.find(".gdml"), "_nowires");
 
     // Search all reasonable locations for the GDML file that contains
     // the detector geometry.
@@ -141,23 +134,22 @@ namespace geo {
     cet::search_path const sp{"FW_SEARCH_PATH"};
 
     std::string GDMLfile;
-    if( !sp.find_file(GDMLFileName, GDMLfile) ) {
-      throw cet::exception("Geometry")
-        << "cannot find the gdml geometry file:"
-        << "\n" << GDMLFileName
-        << "\nbail ungracefully.\n";
+    if (!sp.find_file(GDMLFileName, GDMLfile)) {
+      throw cet::exception("Geometry") << "cannot find the gdml geometry file:"
+                                       << "\n"
+                                       << GDMLFileName << "\nbail ungracefully.\n";
     }
 
     std::string ROOTfile;
-    if( !sp.find_file(ROOTFileName, ROOTfile) ) {
-      throw cet::exception("Geometry")
-        << "cannot find the root geometry file:\n"
-        << "\n" << ROOTFileName
-        << "\nbail ungracefully.\n";
+    if (!sp.find_file(ROOTFileName, ROOTfile)) {
+      throw cet::exception("Geometry") << "cannot find the root geometry file:\n"
+                                       << "\n"
+                                       << ROOTFileName << "\nbail ungracefully.\n";
     }
 
     {
-      fhicl::Table<geo::GeometryBuilderStandard::Config> const config{fBuilderParameters, {"tool_type"}};
+      fhicl::Table<geo::GeometryBuilderStandard::Config> const config{fBuilderParameters,
+                                                                      {"tool_type"}};
       geo::GeometryBuilderStandard builder{config()};
 
       // initialize the geometry with the files we have found
@@ -170,8 +162,7 @@ namespace geo {
   } // Geometry::LoadNewGeometry()
 
   //......................................................................
-  void Geometry::FillGeometryConfigurationInfo
-    (fhicl::ParameterSet const& config)
+  void Geometry::FillGeometryConfigurationInfo(fhicl::ParameterSet const& config)
   {
 
     sumdata::GeometryConfigurationInfo confInfo;
@@ -184,14 +175,12 @@ namespace geo {
     confInfo.geometryServiceConfiguration = config.to_indented_string();
     fConfInfo = std::move(confInfo);
 
-    MF_LOG_TRACE("Geometry")
-      << "Geometry configuration information:\n" << fConfInfo;
+    MF_LOG_TRACE("Geometry") << "Geometry configuration information:\n" << fConfInfo;
 
   } // Geometry::FillGeometryConfigurationInfo()
 
   //......................................................................
-  bool Geometry::CheckConfigurationInfo
-    (sumdata::GeometryConfigurationInfo const& other) const
+  bool Geometry::CheckConfigurationInfo(sumdata::GeometryConfigurationInfo const& other) const
   {
 
     MF_LOG_DEBUG("Geometry") << "New geometry information:\n" << other;
@@ -201,31 +190,25 @@ namespace geo {
   } // Geometry::CheckConfigurationInfo()
 
   //......................................................................
-  sumdata::GeometryConfigurationInfo const& Geometry::ReadConfigurationInfo
-    (art::Run const& run)
+  sumdata::GeometryConfigurationInfo const& Geometry::ReadConfigurationInfo(art::Run const& run)
   {
 
     try {
-      return run.getProduct<sumdata::GeometryConfigurationInfo>
-        (art::InputTag{"GeometryConfigurationWriter"});
+      return run.getProduct<sumdata::GeometryConfigurationInfo>(
+        art::InputTag{"GeometryConfigurationWriter"});
     }
     catch (art::Exception const& e) {
-      throw art::Exception{
-        e.categoryCode(),
-        "Can't read geometry configuration information.\n"
-        "Is `GeometryConfigurationWriter` service configured?\n",
-        e
-        };
+      throw art::Exception{e.categoryCode(),
+                           "Can't read geometry configuration information.\n"
+                           "Is `GeometryConfigurationWriter` service configured?\n",
+                           e};
     }
 
   } // Geometry::ReadConfigurationInfo()
 
-
   //......................................................................
-  bool Geometry::CompareConfigurationInfo(
-    sumdata::GeometryConfigurationInfo const& A,
-    sumdata::GeometryConfigurationInfo const& B
-    )
+  bool Geometry::CompareConfigurationInfo(sumdata::GeometryConfigurationInfo const& A,
+                                          sumdata::GeometryConfigurationInfo const& B)
   {
     /*
      * Implemented criteria:
@@ -237,12 +220,14 @@ namespace geo {
 
     if (!A.isDataValid()) {
       mf::LogWarning("Geometry") << "Geometry::CompareConfigurationInfo(): "
-        "invalid version for configuration A:\n" << A;
+                                    "invalid version for configuration A:\n"
+                                 << A;
       return false;
     }
     if (!B.isDataValid()) {
       mf::LogWarning("Geometry") << "Geometry::CompareConfigurationInfo(): "
-        "invalid version for configuration B:\n" << B;
+                                    "invalid version for configuration B:\n"
+                                 << B;
       return false;
     }
 
@@ -253,8 +238,8 @@ namespace geo {
 
     if (A.detectorName != B.detectorName) { // case sensitive so far
       mf::LogWarning("Geometry") << "Geometry::CompareConfigurationInfo(): "
-        "detector name mismatch: '" << A.detectorName << "' vs. '"
-        << B.detectorName << "'";
+                                    "detector name mismatch: '"
+                                 << A.detectorName << "' vs. '" << B.detectorName << "'";
       return false;
     }
 

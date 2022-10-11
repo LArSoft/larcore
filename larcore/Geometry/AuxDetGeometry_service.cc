@@ -14,4 +14,3 @@
 namespace geo {
   DEFINE_ART_SERVICE(AuxDetGeometry)
 } // namespace geo
-
