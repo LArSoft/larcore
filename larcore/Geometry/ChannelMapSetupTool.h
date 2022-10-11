@@ -3,7 +3,7 @@
  * @brief  Interface for a tool to configure a geometry channel mapper.
  * @author Gianluca Petrillo (petrillo@slac.stanford.edu)
  * @date   October 7, 2019
- * 
+ *
  * This library is header-only.
  */
 
@@ -17,9 +17,9 @@ namespace geo {
 
   /**
    * @brief Interface for a tool creating a channel mapping object.
-   * 
+   *
    * This class creates a `geo::ChannelMapAlg` instance.
-   * 
+   *
    */
   class ChannelMapSetupTool {
   public:
@@ -27,10 +27,10 @@ namespace geo {
 
     /**
      * @brief Returns a new instance of the channel mapping.
-     * 
+     *
      * If the call fails, a null pointer is returned. This may happen on calls
      * following the first one, if the implementation does not support multiple
-     * calls. 
+     * calls.
      * For all other errors, the implementations are expected to throw
      * the proper exception.
      */
