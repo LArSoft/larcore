@@ -344,7 +344,7 @@ void DumpWireToChannel::Dump(std::string OutputCategory) const
 
   // print map
   mf::LogVerbatim log(OutputCategory);
-  for (geo::WireID const& wireID : pGeom->IterateWireIDs()) {
+  for (geo::WireID const& wireID : pGeom->Iterate<geo::WireID>()) {
     raw::ChannelID_t channel = pGeom->PlaneWireToChannel(wireID);
     log << "\n { " << std::string(wireID) << " } => ";
     if (raw::isValidChannelID(channel))
