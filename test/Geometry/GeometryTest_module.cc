@@ -6,23 +6,19 @@
  */
 
 // LArSoft includes
+#include "larcore/Geometry/AuxDetGeometry.h"
 #include "larcore/Geometry/Geometry.h"
+#include "larcore/Geometry/WireReadout.h"
 #include "larcorealg/test/Geometry/GeometryTestAlg.h"
 
 // Framework includes
 #include "art/Framework/Core/EDAnalyzer.h"
 #include "art/Framework/Core/ModuleMacros.h"
 #include "art/Framework/Services/Registry/ServiceHandle.h"
+#include "fhiclcpp/fwd.h"
 
 // C/C++ standard library
 #include <memory> // std::unique_ptr<>
-
-namespace art {
-  class Event;
-} // art::Event declaration
-namespace fhicl {
-  class ParameterSet;
-}
 
 namespace geo {
   /**
@@ -37,11 +33,11 @@ namespace geo {
   public:
     explicit GeometryTest(fhicl::ParameterSet const& pset);
 
-    virtual void analyze(art::Event const&) {}
-    virtual void beginJob();
-
   private:
-    std::unique_ptr<geo::GeometryTestAlg> tester; ///< the test algorithm
+    void analyze(art::Event const&) override {}
+    void beginJob() override;
+
+    GeometryTestAlg tester; ///< the test algorithm
 
   }; // class GeometryTest
 } // namespace geo
@@ -51,21 +47,15 @@ namespace geo {
 
   //......................................................................
   GeometryTest::GeometryTest(fhicl::ParameterSet const& pset)
-    : EDAnalyzer(pset), tester(new geo::GeometryTestAlg(pset))
-  {} // GeometryTest::GeometryTest()
+    : EDAnalyzer(pset)
+    , tester{art::ServiceHandle<Geometry const>{}.get(),
+             &art::ServiceHandle<WireReadout const>{}->Get(),
+             art::ServiceHandle<AuxDetGeometry const>{}->GetProviderPtr(),
+             pset}
+  {}
 
   //......................................................................
-  void GeometryTest::beginJob()
-  {
-    art::ServiceHandle<geo::Geometry const> geom;
-
-    // 1. we set it up with the geometry from the environment
-    tester->Setup(*geom);
-
-    // 2. then we run it!
-    tester->Run();
-
-  } // GeometryTest::beginJob()
+  void GeometryTest::beginJob() { tester.Run(); }
 
   //......................................................................
   DEFINE_ART_MODULE(GeometryTest)

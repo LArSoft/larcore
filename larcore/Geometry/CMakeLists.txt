@@ -1,14 +1,14 @@
-cet_make_library(LIBRARY_NAME ExptGeoHelperService INTERFACE
-  SOURCE ExptGeoHelperInterface.h
+cet_make_library(LIBRARY_NAME WireReadout INTERFACE
+  SOURCE WireReadout.h
   LIBRARIES INTERFACE
   larcorealg::Geometry
   art_plugin_types::serviceDeclaration
 )
 
-cet_write_plugin_builder(lar::ExptGeoHelperService art::service Modules
+cet_write_plugin_builder(lar::WireReadout art::service Modules
   INSTALL_BUILDER
   LIBRARIES CONDITIONAL
-  larcore::ExptGeoHelperService
+  larcore::WireReadout
 )
 
 cet_make_library(LIBRARY_NAME ChannelMapSetupTool INTERFACE
@@ -17,23 +17,33 @@ cet_make_library(LIBRARY_NAME ChannelMapSetupTool INTERFACE
   larcorealg::Geometry
 )
 
+
 cet_write_plugin_builder(lar::ChannelMapSetupTool art::tool Modules
   INSTALL_BUILDER
   LIBRARIES CONDITIONAL
   larcorealg::ChannelMapSetupTool
 )
 
+cet_build_plugin(AuxDetGeoObjectSorterStandard art::tool
+  LIBRARIES REG larcorealg::Geometry)
+
+cet_build_plugin(GeoObjectSorterStandard art::tool
+  LIBRARIES REG larcorealg::Geometry)
+
+cet_build_plugin(WireReadoutSorterStandard art::tool
+  LIBRARIES REG larcorealg::Geometry)
+
 cet_build_plugin(Geometry art::service
   LIBRARIES
   PUBLIC
   larcorealg::Geometry
   larcoreobj::SummaryData
-  fhiclcpp::fhiclcpp
   PRIVATE
   larcore::ServiceUtil
   art::Framework_Principal
   messagefacility::MF_MessageLogger
   canvas::canvas
+  fhiclcpp::fhiclcpp
   fhiclcpp::types
   cetlib::cetlib
 )
@@ -43,9 +53,6 @@ cet_build_plugin(AuxDetGeometry art::service
   PUBLIC
   larcorealg::Geometry
   PRIVATE
-  larcoreobj::SummaryData
-  art::Framework_Principal
-  messagefacility::MF_MessageLogger
   cetlib::cetlib
   cetlib_except::cetlib_except
 )
@@ -60,9 +67,9 @@ cet_build_plugin(GeometryConfigurationWriter art::ProducingService
   canvas::canvas
 )
 
-include(lar::ExptGeoHelperService)
+include(lar::WireReadout)
 
-cet_build_plugin(StandardGeometryHelper lar::ExptGeoHelperService
+cet_build_plugin(StandardWireReadout lar::WireReadout
   LIBRARIES PRIVATE
   messagefacility::MF_MessageLogger
 )

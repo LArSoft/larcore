@@ -128,7 +128,7 @@ template <typename Stream>
 void geo::DumpGeometry::dumpGeometryCore(Stream&& out, geo::GeometryCore const& geom) const
 {
 
-  out << "Detector description: '" << geom.ROOTFile() << "'\n";
+  out << "Detector description: '" << geom.GDMLFile() << "'\n";
   geom.Print(std::forward<Stream>(out));
 
 } // geo::DumpGeometry::dumpGeometryCore()
