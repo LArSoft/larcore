@@ -6,7 +6,7 @@ If you have a problem, please log a redmine issue: https://cdcvs.fnal.gov/redmin
 
 ## Dependencies
 
-Larcore, larcorobj, and larcorealg are the basic LarSoft ups products.
+Larcore, larcoreobj, and larcorealg are the basic LarSoft ups products.
 
 ## Packages
 
