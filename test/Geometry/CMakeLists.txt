@@ -1,5 +1,11 @@
 cet_enable_asserts()
 
+cet_test_env("FW_SEARCH_PATH=${larcorealg_BINARY_DIR}/gdml")
+cet_transitive_paths(FHICL_DIR BINARY IN_TREE)
+cet_test_env_prepend(FHICL_FILE_PATH "." ${TRANSITIVE_PATHS_WITH_FHICL_DIR})
+cet_transitive_paths(LIBRARY_DIR BINARY IN_TREE)
+cet_test_env_prepend(CET_PLUGIN_PATH ${TRANSITIVE_PATHS_WITH_LIBRARY_DIR})
+
 add_subdirectory(VersionCheck)
 
 # test modules
@@ -59,4 +65,3 @@ cet_test(dump_channel_map_test HANDBUILT
 install_headers()
 install_fhicl()
 install_source()
-
