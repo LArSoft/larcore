@@ -49,13 +49,16 @@ namespace geo {
   GeometryTest::GeometryTest(fhicl::ParameterSet const& pset)
     : EDAnalyzer(pset)
     , tester{art::ServiceHandle<Geometry const>{}.get(),
-             &art::ServiceHandle<WireReadout const>{}->Get(),
-             art::ServiceHandle<AuxDetGeometry const>{}->GetProviderPtr(),
+             &art::ServiceHandle<WireReadout const>{} -> Get(),
+             art::ServiceHandle<AuxDetGeometry const>{} -> GetProviderPtr(),
              pset}
   {}
 
   //......................................................................
-  void GeometryTest::beginJob() { tester.Run(); }
+  void GeometryTest::beginJob()
+  {
+    tester.Run();
+  }
 
   //......................................................................
   DEFINE_ART_MODULE(GeometryTest)

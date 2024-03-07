@@ -28,5 +28,8 @@ namespace geo {
     mf::LogInfo("StandardWireReadout") << "Loading wire readout: WireReadoutStandardGeom";
   }
 
-  WireReadoutGeom const& StandardWireReadout::wireReadoutGeom() const { return alg_; }
+  WireReadoutGeom const& StandardWireReadout::wireReadoutGeom() const
+  {
+    return alg_;
+  }
 }
