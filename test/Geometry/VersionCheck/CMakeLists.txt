@@ -179,4 +179,3 @@ cet_test(GeometryInfoCheckCompatible2 HANDBUILT
   TEST_PROPERTIES
     DEPENDS GeometryInfoCheckCompatible
 )
-
