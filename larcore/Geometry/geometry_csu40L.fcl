@@ -3,15 +3,12 @@ BEGIN_PROLOG
 csu40L_geo:
 {
  SurfaceY:         1.0e2                   #in cm, vertical distance to the surface
- Name:             "csu40l"
  GDML:             "csu40l.gdml"
- ROOT:             "csu40l.gdml"
- DisableWiresInG4: false                         # Has no wires
 }
 
-csu40L_geometry_helper:
+csu40L_readout:
 {
- service_provider : StandardGeometryHelper
+ service_provider : StandardWireReadout
 }
 
 END_PROLOG

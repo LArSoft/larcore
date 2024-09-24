@@ -7,6 +7,7 @@
 
 // LArSoft includes
 #include "larcore/Geometry/Geometry.h"
+#include "larcore/Geometry/WireReadout.h"
 #include "larcorealg/test/Geometry/GeometryIteratorLoopTestAlg.h"
 
 // Framework includes
@@ -28,7 +29,9 @@ namespace geo {
   class GeometryIteratorLoopTest : public art::EDAnalyzer {
   public:
     explicit GeometryIteratorLoopTest(fhicl::ParameterSet const& pset)
-      : EDAnalyzer{pset}, tester{art::ServiceHandle<geo::Geometry const>{}.get()}
+      : EDAnalyzer{pset}
+      , tester{art::ServiceHandle<geo::Geometry const>{}.get(),
+               &art::ServiceHandle<geo::WireReadout const>()->Get()}
     {}
 
   private:

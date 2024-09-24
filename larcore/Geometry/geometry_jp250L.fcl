@@ -6,12 +6,11 @@ jp250L_geo:
  Name:         "jp250l"
  RelativePath: "Geometry/gdml/"
  GDML:         "jp250L.gdml"
- ROOT:         "jp250L.gdml"
 }
 
-jp250L_geometry_helper:
+jp250L_readout:
 {
- service_provider : StandardGeometryHelper
+ service_provider : StandardWireReadout
 }
 
 END_PROLOG

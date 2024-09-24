@@ -1,5 +1,5 @@
 typedef struct _drawopt {
-  const char* volume;
+  char const* volume;
   int color;
 } drawopt;
 

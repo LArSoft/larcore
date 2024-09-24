@@ -11,8 +11,4 @@
 // Framework includes
 #include "art/Framework/Services/Registry/ServiceDefinitionMacros.h"
 
-namespace geo {
-
-  //......................................................................
-  DEFINE_ART_SERVICE(Geometry)
-} // namespace geo
+DEFINE_ART_SERVICE(geo::Geometry)

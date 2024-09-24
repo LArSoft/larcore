@@ -11,8 +11,7 @@ BEGIN_PROLOG
 # the "standard" geometry configuration is from the "LArTPCdetector":
 #
 standard_geo:               @local::lartpcdetector_geometry
-standard_geometry_helper:   @local::lartpcdetector_geometry_helper
+standard_wire_readout:      @local::lartpcdetector_readout
 standard_geometry_services: @local::lartpcdetector_geometry_services
 
 END_PROLOG
-

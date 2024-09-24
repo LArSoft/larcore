@@ -5,7 +5,7 @@
 # Date:    November 11, 2020
 #
 # Two "alternative" geometries are provided (they just differ by their name):
-# 
+#
 # * `test_geometry_check_services_A`
 # * `test_geometry_check_services_B`
 #
@@ -18,22 +18,23 @@ BEGIN_PROLOG
 
 # ------------------------------------------------------------------------------
 test_geometry_check_services_A: {
-  
+
   @table::lartpcdetector_geometry_services
-  
+
 } # test_geometry_check_services_A
 
 test_geometry_check_services_A.Geometry.Name: "A"
-
+test_geometry_check_services_A.AuxDetGeometry: @erase
 
 # ------------------------------------------------------------------------------
 test_geometry_check_services_B: {
-  
+
   @table::lartpcdetector_geometry_services
-  
+
 } # test_geometry_check_services_B
 
 test_geometry_check_services_B.Geometry.Name: "B"
+test_geometry_check_services_B.AuxDetGeometry: @erase
 
 
 # ------------------------------------------------------------------------------
