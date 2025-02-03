@@ -8,13 +8,19 @@
 
 // LArSoft libraries
 #include "larcore/CoreUtils/ServiceUtil.h"
+#include "larcore/Geometry/AuxDetGeometry.h"
 #include "larcore/Geometry/Geometry.h"
+#include "larcore/Geometry/WireReadout.h"
+#include "larcorealg/Geometry/AuxDetGeometryCore.h"
 #include "larcorealg/Geometry/GeometryCore.h"
+#include "larcorealg/Geometry/WireReadoutDumper.h"
+#include "larcorealg/Geometry/WireReadoutGeom.h"
 
 // framework libraries
 #include "art/Framework/Core/EDAnalyzer.h"
 #include "art/Framework/Core/ModuleMacros.h"
 #include "art/Framework/Principal/Run.h"
+#include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "canvas/Persistency/Provenance/RunID.h"
 #include "fhiclcpp/types/Atom.h"
 #include "fhiclcpp/types/Comment.h"
@@ -81,7 +87,10 @@ private:
 
   /// Dumps the specified geometry into the specified output stream.
   template <typename Stream>
-  void dumpGeometryCore(Stream&& out, geo::GeometryCore const& geom) const;
+  void dumpGeometry(Stream&& out,
+                    geo::GeometryCore const* geom,
+                    geo::WireReadoutGeom const* wireGeom,
+                    geo::AuxDetGeometryCore const* auxGeom) const;
 
   /// Dumps the geometry and records it.
   template <typename Stream>
@@ -125,11 +134,16 @@ void geo::DumpGeometry::beginRun(art::Run const& run)
 
 //------------------------------------------------------------------------------
 template <typename Stream>
-void geo::DumpGeometry::dumpGeometryCore(Stream&& out, geo::GeometryCore const& geom) const
+void geo::DumpGeometry::dumpGeometry(Stream&& out,
+                                     geo::GeometryCore const* geom,
+                                     geo::WireReadoutGeom const* wireGeom,
+                                     geo::AuxDetGeometryCore const* auxDetGeom) const
 {
 
-  out << "Detector description: '" << geom.GDMLFile() << "'\n";
-  geom.Print(std::forward<Stream>(out));
+  out << "Detector description: '" << (geom ? geom->GDMLFile() : "unknown") << "'\n";
+
+  geo::WireReadoutDumper const dumper{geom, wireGeom, auxDetGeom};
+  out << dumper.toStream();
 
 } // geo::DumpGeometry::dumpGeometryCore()
 
@@ -139,7 +153,9 @@ void geo::DumpGeometry::dump(Stream&& out, geo::GeometryCore const& geom)
 {
 
   fLastDetectorName = geom.DetectorName();
-  dumpGeometryCore(std::forward<Stream>(out), geom);
+  auto const& wireGeom = art::ServiceHandle<geo::WireReadout>()->Get();
+  auto const& auxDetGeom = art::ServiceHandle<geo::AuxDetGeometry>()->GetProvider();
+  dumpGeometry(out, &geom, &wireGeom, &auxDetGeom);
 
 } // geo::DumpGeometry::dump()
 
