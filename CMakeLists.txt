@@ -9,11 +9,12 @@
 cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 
 find_package(cetmodules 3.24.00 REQUIRED)
-project(larcore VERSION 10.00.06 LANGUAGES CXX)
+project(larcore LANGUAGES CXX)
 
 # cetbuildtools contains our cmake modules
 
 include(CetCMakeEnv)
+set(${PROJECT_NAME}_CMAKE_PROJECT_VERSION_STRING 11.00.00-rc0)
 cet_cmake_env()
 
 cet_set_compiler_flags(DIAGS CAUTIOUS
