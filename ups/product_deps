@@ -87,7 +87,7 @@
 #>  define_pythonpath
 ####################################
 parent		larcore
-defaultqual	e26
+defaultqual	e28
 ####################################
 
 ####################################
@@ -248,8 +248,8 @@ gdmldir	product_dir
 #
 ####################################
 product		version		qual	flags		<table_format=2>
-art_root_io	v1_13_06	-
-larcorealg	v10_00_06	-
+art_root_io	v1_14_02	-
+larcorealg	v11_00_00	-
 cetmodules	v3_27_04	-	only_for_build
 end_product_list
 ####################################
@@ -306,10 +306,6 @@ end_product_list
 #
 ####################################
 qualifier	art_root_io	larcorealg	notes
-c14:debug	c14:debug	c14:debug
-c14:prof	c14:prof	c14:prof
-e26:debug	e26:debug	e26:debug
-e26:prof	e26:prof	e26:prof
 e28:debug	e28:debug	e28:debug
 e28:prof	e28:prof	e28:prof
 end_qualifier_list
